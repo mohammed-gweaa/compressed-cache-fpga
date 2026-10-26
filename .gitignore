@@ -59,6 +59,11 @@ modelsim.ini
 *.tmp
 *.orig
 
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
 # Operating System Artifacts
 Thumbs.db
 Desktop.ini

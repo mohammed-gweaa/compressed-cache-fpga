@@ -135,7 +135,7 @@
 3. **المسار الثالث (`rtl/board_demo/` و `synth/board_demo/`) - العرض العملي الفيزيائي:**
    * يحتوي على نسخ مستقلة ومحلية بالكامل من كافة الوحدات الفرعية لمنع أي تعديل على كود النواة الأصلية.
    * مربوط بـ 106 دبابيس فيزيائية على لوحة DE2i-150 / DE2-115 لتشغيل المفاتيح وشاشات الـ 7-segment ومصابيح الـ LED.
-   * متكامل مع واجهة **Altera ISSP (In-System Sources and Probes)** للحقن الآلي للاختبارات عبر JTAG وقراءة السجلات لحظياً عبر لغة Python و Tcl.
+   * متكامل مع واجهة **Altera ISSP (In-System Sources and Probes)** للحقن الآلي للاختبارات عبر JTAG وقراءة السجلات لحظياً عبر سكربتات Tcl الآلية الموجهة لبرنامج Quartus SignalTap.
 
 ---
 
@@ -254,11 +254,20 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 
 ### ثالثاً: الاختبار الآلي على اللوحة الحقيقية عبر Altera ISSP JTAG
 
-يحتوي مجلد `synth/board_demo/issp_scripts/` على بيئة تشغيل متقدمة بلغة Python و Tcl للتحكم في الكاش واختباره وهو يعمل داخل السيليكون:
-* **`issp_signals.py`**: تعريف خريطة البتات لكافة إشارات الكاش.
-* **`issp_read_telemetry.py`**: قراءة عدادات الأداء وإحصائيات الضربات والإخفاق ونمط الضغط لحظياً عبر JTAG.
-* **`issp_inject_stimulus.py`**: حقن عمليات قراءة وكتابة مخصصة وفحص الردود.
-* **`issp_auto_validate.py`**: تشغيل حزمة اختبارات ذاتية متكاملة على العتاد والتأكد من مطابقة السلوك للمحاكاة بنسبة 100%.
+يحتوي مجلد `synth/board_demo/issp_scripts/` على بيئة تشغيل وتحكم متكاملة عبر سكربتات Tcl لبرنامج **Quartus SignalTap / ISSP (`quartus_stp -t`)** لاختبار الكاش أثناء عمله على السيليكون الحقيقي عبر كابل USB-Blaster:
+* **`issp_signal_map.tcl`**: مكتبة Tcl الأساسية لفك حقول الـ 320-bit Probe و 357-bit Source وترجمة أنماط الضغط وتنسيق لوحة المراقبة الهندسية (ASCII Dashboard).
+* **`issp_read_telemetry.tcl`**: قراءة حية لعدادات الأداء ونمط الضغط وحالة الارتباطية وطباعة لوحة القيادة العتادية:
+  ```bash
+  quartus_stp -t issp_read_telemetry.tcl
+  ```
+* **`issp_inject_test_vector.tcl`**: طرفية تفاعلية لحقن طلبات القراءة والكتابة واختبار تجاوز تعارضات RAW في الزمن الحقيقي:
+  ```bash
+  quartus_stp -t issp_inject_test_vector.tcl
+  ```
+* **`issp_automated_validation.tcl`**: تنفيذ حزمة التحقق السباعية الآلية الشاملة على السيليكون (7 اختبارات متتابعة تشمل فحص دقة فك الضغط والتخزين المزدوج وتجاوز التعارضات وتقليص الارتباطية):
+  ```bash
+  quartus_stp -t issp_automated_validation.tcl
+  ```
 
 ---
 
@@ -303,7 +312,7 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 │   ├── bdi_cache/                     # المسار 1: توليف كاش BDI المقترح (Virtual Pins)
 │   ├── conventional_cache/            # المسار 2: توليف الكاش التقليدي (Virtual Pins)
 │   ├── board_demo/                    # المسار 3: توليف العرض الفيزيائي (106 دبابيس فيزيائية)
-│   │   └── issp_scripts/              # أدوات فحص JTAG ISSP الآلية بلغة Python و Tcl
+│   │   └── issp_scripts/              # أدوات فحص JTAG ISSP الآلية عبر سكربتات Tcl
 │   └── README.md                      # دليل التوليف والتحليل الزمني والدبابيس الافتراضية
 ├── docs/                              # الوثائق والمواصفات الهندسية الشاملة
 │   ├── MASTER_ARCHITECTURE_SPECIFICATION.md # المواصفة المعمارية الكاملة

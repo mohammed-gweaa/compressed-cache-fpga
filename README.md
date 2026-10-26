@@ -176,11 +176,10 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   │   ├── assign_board_demo_pins.tcl # DE2i-150 Physical Pin Constraints (106 Pins)
 │   │   └── issp_scripts/              # Altera ISSP JTAG Automation Scripts & Guides
 │   │       ├── README_ISSP_GUIDE.md   # Complete JTAG ISSP Automation Manual
-│   │       ├── issp_signals.py        # Python Bitfield Mapping Library
-│   │       ├── issp_read_telemetry.py # Live Telemetry Reader
-│   │       ├── issp_inject_stimulus.py# Interactive Stimulus Injector
-│   │       ├── issp_auto_validate.py  # Automated Hardware Validation Suite
-│   │       └── issp_driver.tcl        # Quartus HPS/FPGA Tcl Bridge
+│   │       ├── issp_signal_map.tcl    # Tcl Bitfield Mapping & Profile Translation Library
+│   │       ├── issp_read_telemetry.tcl # Live Telemetry Dashboard Reader
+│   │       ├── issp_inject_test_vector.tcl # Interactive Stimulus & Hazard Injector
+│   │       └── issp_automated_validation.tcl # 7-Step Automated Silicon Validation Suite
 │   └── README.md                      # Synthesis, STA, and Virtual vs Physical Pins Guide
 ├── docs/                              # Technical Engineering Specifications
 │   ├── MASTER_ARCHITECTURE_SPECIFICATION.md # Full Microarchitecture Reference Manual
@@ -255,7 +254,7 @@ graph TD
    * **Physical Demonstration Wrapper:** Connects the cache subsystem to physical DE2i-150 / DE2-115 board resources (50 MHz oscillator, push-buttons, slide switches, 7-segment hex displays, and LEDs).
    * **Complete Code Isolation:** To satisfy the strict rule *"حطها بروحها، ما فيش تشارك في الأكواد"* (Keep them separate, zero shared code), `rtl/board_demo/` contains **its own independent, localized copies** of all RTL submodules. Any debug probe taps (e.g., `dbg_compress_type`, `dbg_fwd_valid`) or ISSP JTAG IP cores remain completely self-contained within `rtl/board_demo/` and can never alter or corrupt the pristine Track 1 research IP core.
    * **Physical Pin Mapping:** Synthesized with 106 physical package pin assignments without virtual pins, producing a ready-to-program `.sof` bitstream.
-   * **Automated ISSP JTAG Testing:** Equipped with Python and Tcl automation scripts under `synth/board_demo/issp_scripts/` for live in-system cache stimulus injection and telemetry reading.
+   * **Automated ISSP JTAG Testing:** Equipped with automated Tcl JTAG scripts under `synth/board_demo/issp_scripts/` (executed via `quartus_stp -t`) for live in-system cache stimulus injection and telemetry reading.
 
 ---
 
@@ -363,17 +362,17 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 For live verification on real silicon without external logic analyzers:
 1. Program the DE2i-150 board with `l2_bdi_cache_board_demo.sof`.
 2. Navigate to `synth/board_demo/issp_scripts/`.
-3. Read live hardware telemetry counters:
+3. Read live hardware telemetry counters and render the ASCII dashboard:
    ```cmd
-   python issp_read_telemetry.py
+   quartus_stp -t issp_read_telemetry.tcl
    ```
-4. Inject custom read/write transactions into the live cache:
+4. Inject custom read/write transactions or trigger real-time RAW hazards:
    ```cmd
-   python issp_inject_stimulus.py
+   quartus_stp -t issp_inject_test_vector.tcl
    ```
-5. Run the complete automated hardware verification suite:
+5. Run the complete automated 7-step hardware verification suite:
    ```cmd
-   python issp_auto_validate.py
+   quartus_stp -t issp_automated_validation.tcl
    ```
 
 ---

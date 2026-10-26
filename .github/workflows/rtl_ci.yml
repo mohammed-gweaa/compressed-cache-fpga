@@ -52,8 +52,8 @@ jobs:
                                 rtl/board_demo/l2_bdi_cache_top.v \
                                 rtl/board_demo/l2_bdi_cache_board_demo.v
 
-  python-scripts-and-metadata:
-    name: ISSP Scripts & Documentation Verification
+  scripts-and-deliverables-audit:
+    name: Automation Scripts & Release Deliverables Audit
     runs-on: ubuntu-latest
 
     steps:
@@ -65,19 +65,31 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Verify ISSP Python Scripts Syntax
+      - name: Verify Python Deliverables Exporter
         run: |
-          python -m py_compile synth/board_demo/issp_scripts/issp_signals.py
-          python -m py_compile synth/board_demo/issp_scripts/issp_read_telemetry.py
-          python -m py_compile synth/board_demo/issp_scripts/issp_inject_stimulus.py
-          python -m py_compile synth/board_demo/issp_scripts/issp_auto_validate.py
-          echo "All ISSP JTAG automation scripts compiled cleanly."
+          python -m py_compile poster/latex_source/export_deliverables.py
+          echo "Python export scripts compiled cleanly."
 
-      - name: Verify Key Artifacts Integrity
+      - name: Install Tcl Shell & Audit ISSP Scripts
+        run: |
+          sudo apt-get update && sudo apt-get install -y tcl
+          test -f synth/board_demo/issp_scripts/issp_signal_map.tcl || exit 1
+          test -f synth/board_demo/issp_scripts/issp_read_telemetry.tcl || exit 1
+          test -f synth/board_demo/issp_scripts/issp_inject_test_vector.tcl || exit 1
+          test -f synth/board_demo/issp_scripts/issp_automated_validation.tcl || exit 1
+          test -f synth/board_demo/issp_scripts/README_ISSP_GUIDE.md || exit 1
+          echo "source synth/board_demo/issp_scripts/issp_signal_map.tcl; puts \"ISSP Signal Map Tcl Library Verified.\"" | tclsh
+
+      - name: Verify Key Artifacts & Project Integrity
         run: |
           test -f poster/EngPoster.pdf || exit 1
+          test -f poster/RTL.pdf || exit 1
           test -f README.md || exit 1
           test -f README_AR.md || exit 1
           test -f LICENSE || exit 1
           test -f CITATION.cff || exit 1
-          echo "All release artifacts and documentation files verified."
+          test -f CONTRIBUTING.md || exit 1
+          test -f synth/bdi_cache/l2_bdi_cache_top.qsf || exit 1
+          test -f synth/conventional_cache/l2_conventional_cache_top.qsf || exit 1
+          test -f synth/board_demo/l2_bdi_cache_board_demo.qsf || exit 1
+          echo "All release artifacts and Quartus project descriptors verified."

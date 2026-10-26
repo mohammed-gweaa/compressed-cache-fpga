@@ -10,9 +10,11 @@ This directory contains the cycle-accurate verification testbenches for the **Le
 tb/
 ├── bdi_cache/                # Suite 1: Proposed BDI Core Functional & Hazard Testbench
 │   └── tb_l2_bdi_cache_top.v # 17-Scenario Exhaustive Core Testbench
-├── comparative/              # Suite 2: Head-to-Head Comparative Stress Benchmark
+├── conventional_cache/       # Suite 2: Baseline Conventional Cache Standalone Testbench
+│   └── tb_l2_conventional_cache_top.v # Baseline Power & Functional Verification
+├── comparative/              # Suite 3: Head-to-Head Comparative Stress Benchmark
 │   └── tb_l2_comparative_stress_benchmark.v # BDI Cache vs. Baseline Benchmark
-└── paper_artifacts/          # Suite 3: Publication Waveform Capture
+└── paper_artifacts/          # Suite 4: Publication Waveform Capture
     └── tb_paper_journal_artifacts.v # Generates Figures 9 & 10 for Academic Publications
 ```
 
