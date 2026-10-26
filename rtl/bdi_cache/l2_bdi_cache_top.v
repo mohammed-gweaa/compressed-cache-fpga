@@ -59,13 +59,8 @@ module l2_bdi_cache_top (
     // Software-Directed OS Control Flags from CSR Bank
     output wire        prefetch_en,
     output wire        mshr_en,
-    output wire        workload_mode,
-
-    // Real-Time Hardware Diagnostic Telemetry Probes
-    output wire [2:0]  dbg_compress_type,
-    output wire        dbg_fwd_valid
+    output wire        workload_mode
 );
-
 
     // -------------------------------------------------------------------------
     // 1. Pipeline Hazard Tracking & Store-to-Load Forwarding (STLF) Logic
@@ -348,7 +343,5 @@ module l2_bdi_cache_top (
             end
         end
     end
-    assign dbg_compress_type = compress_type_out;
-    assign dbg_fwd_valid     = fwd_valid;
 
 endmodule

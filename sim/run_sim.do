@@ -21,8 +21,6 @@ vlog -work work ../rtl/bdi_cache/l2_bdi_cache_top.v
 # 2. Compile Baseline Conventional L2 Cache
 vlog -work work ../rtl/conventional_cache/l2_conventional_cache_top.v
 
-# 3. Compile Physical Board Demo Wrapper
-vlog -work work ../rtl/board_demo/l2_bdi_cache_board_demo.v
 
 # 4. Compile Verification Testbenches
 vlog -work work ../tb/bdi_cache/tb_l2_bdi_cache_top.v

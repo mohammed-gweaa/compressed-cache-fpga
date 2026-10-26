@@ -84,9 +84,7 @@ module tb_l2_comparative_stress_benchmark;
         .dbg_hazard_count (bdi_hazard_count),
         .prefetch_en      (),
         .mshr_en          (),
-        .workload_mode    (),
-        .dbg_compress_type(),
-        .dbg_fwd_valid    ()
+        .workload_mode    ()
     );
 
     // ── Instance 2: Conventional Baseline Uncompressed L2 Cache (UUT Conv) ─────

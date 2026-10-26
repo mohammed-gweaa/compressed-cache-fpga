@@ -43,8 +43,6 @@ set_instance_assignment -name VIRTUAL_PIN ON -to dbg_hazard_count[*]
 set_instance_assignment -name VIRTUAL_PIN ON -to prefetch_en
 set_instance_assignment -name VIRTUAL_PIN ON -to mshr_en
 set_instance_assignment -name VIRTUAL_PIN ON -to workload_mode
-set_instance_assignment -name VIRTUAL_PIN ON -to dbg_compress_type[*]
-set_instance_assignment -name VIRTUAL_PIN ON -to dbg_fwd_valid
 
 # Preserve physical clock pin
 set_instance_assignment -name VIRTUAL_PIN OFF -to clk
