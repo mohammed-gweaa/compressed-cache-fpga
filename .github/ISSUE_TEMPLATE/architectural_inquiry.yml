@@ -1,0 +1,15 @@
+name: Architectural Inquiry / Research Question
+description: Ask a question regarding the BDI algorithm, STLF, Dual-Slot packing, or graduation defense.
+title: "[QUESTION]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: Use this template for academic discussions, pipeline inquiries, or reproduction guidance.
+  - type: textarea
+    id: question
+    attributes:
+      label: Inquiry Details
+      description: Describe your question or research context.
+    validations:
+      required: true

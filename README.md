@@ -7,6 +7,7 @@
 [![Board Target](https://img.shields.io/badge/Platform-Terasic_DE2i--150-red.svg)](https://www.terasic.com.tw)
 [![Timing Closure](https://img.shields.io/badge/Timing_Closure-50.00_MHz_MET_(+3.218ns)-brightgreen.svg)]()
 [![HDL Standard](https://img.shields.io/badge/HDL-Verilog_IEEE_1364--2001-orange.svg)]()
+[![RTL Verification](https://github.com/mohammed-gweaa/compressed-cache-fpga/actions/workflows/rtl_ci.yml/badge.svg)](https://github.com/mohammed-gweaa/compressed-cache-fpga/actions/workflows/rtl_ci.yml)
 
 A synthesizable Level-2 (L2) cache architecture with Base-Delta-Immediate (BDI) compression, Store-to-Load Forwarding (STLF), and runtime reconfigurable way-masking power control. Synthesized, placed, routed, and timing-closed on an Intel Cyclone IV GX FPGA (`EP4CGX150DF31C7`) on the Terasic DE2i-150 Development Platform.
 
@@ -24,6 +25,14 @@ The complete graduation defense poster is available in [`poster/EngPoster.pdf`](
 
 ---
 
+## Master Architectural System
+
+<p align="center">
+  <img src="figures/renders/fig_system_architecture.png" alt="L2 BDI Cache Top-Level Microarchitecture" width="100%">
+</p>
+
+---
+
 ## Architectural Features
 
 * **4-Stage Pipelined BDI Compressor:** Evaluates parallel delta extractions across 8 compression states per Pekhimenko et al. (Base8-Delta1, Base8-Delta2, Base8-Delta4, Base4-Delta1, Base4-Delta2, Base2-Delta1, Zero, Repeated-Values).
@@ -32,6 +41,52 @@ The complete graduation defense poster is available in [`poster/EngPoster.pdf`](
 * **Store-to-Load Forwarding (STLF):** Detects Read-After-Write (RAW) pipeline hazards across compressor stages and forwards write data directly to the output, eliminating 100% of pipeline hazard stalls (0 stalls vs 20 stalls in the baseline cache).
 * **Adaptive Power Governor:** Dynamically scales set associativity (8-way, 4-way, 2-way, 1-way) via CSR and epoch counters, cutting dynamic bitline switching energy by up to 87.5% under low memory pressure.
 * **Fair Baseline Comparison:** Includes an uncompressed 8-way Tree-PLRU conventional cache (`rtl/conventional_cache/l2_conventional_cache_top.v`) under identical 16 KB SRAM budget for head-to-head architectural validation.
+
+<details>
+<summary><b>🔍 Click to Expand Visual Microarchitecture Gallery (Block Diagrams & Waveforms)</b></summary>
+
+<br>
+
+### 1. 4-Stage Pipelined Compression Engine & BDI Profile Distribution
+<p align="center">
+  <img src="figures/renders/fig_bdi_pipeline.png" alt="4-Stage Pipelined BDI Compressor" width="100%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_bdi_profiles_barchart.png" alt="BDI Profiles Frequency Distribution" width="70%">
+</p>
+
+### 2. Decoupled Dual Sub-Block Cohabitation Layout (Slot A & Slot B)
+<p align="center">
+  <img src="figures/renders/fig_dual_subblock_layout.png" alt="Dual Sub-Block Cohabitation Line Layout" width="85%">
+</p>
+
+### 3. Store-to-Load Forwarding (STLF) Datapath & Zero-Stall Waveform (Figure 9)
+<p align="center">
+  <img src="figures/renders/fig_stlf_datapath.png" alt="STLF Comparator and Bypass Datapath" width="85%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_read_stlf_waveform.png" alt="Cycle-Accurate STLF RAW Bypass Waveform" width="90%">
+</p>
+
+### 4. 4-Stage Pipelined Write Compression Waveform (Figure 10)
+<p align="center">
+  <img src="figures/renders/fig_write_compression_waveform.png" alt="4-Stage Pipelined Compression Waveform" width="90%">
+</p>
+
+### 5. Comparative Benchmark Results & 7-Bit Tree-PLRU Replacement
+<p align="center">
+  <img src="figures/renders/fig_comparative_results.png" alt="Comparative Benchmark Results" width="75%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_tree_plru.png" alt="7-Bit Directional Binary Tree-PLRU" width="80%">
+</p>
+
+### 6. Hardware Implementation & Physical Lab Setup (Terasic DE2i-150)
+<p align="center">
+  <img src="figures/renders/fig_de2i150_board_validation.png" alt="Terasic DE2i-150 Board Validation" width="70%">
+</p>
+
+</details>
 
 ---
 

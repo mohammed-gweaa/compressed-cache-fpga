@@ -25,5 +25,7 @@ This directory contains high-resolution vector PDF figures documenting the micro
 
 ## Formats & Reproducibility
 
-* All figures are compiled in vector PDF format to ensure zero quality degradation when scaled for high-resolution posters (up to 2.0m x 1.5m) and IEEE/ACM journal publications.
-* Waveform captures (`fig_read_stlf_waveform.pdf` and `fig_write_compression_waveform.pdf`) are generated directly from simulation runs using `tb/paper_artifacts/tb_paper_journal_artifacts.v`.
+* **Vector PDF Files:** Compiled in high-resolution vector PDF format to ensure zero quality degradation when scaled for large posters (up to 2.0m x 1.5m) and IEEE/ACM journal publications.
+* **In-Browser Web Renders (`figures/renders/`):** Each vector PDF has an equivalent high-resolution PNG render (180 DPI) optimized for web preview in GitHub markdown documentation and mobile devices without requiring PDF downloads.
+* **Waveform Captures:** (`fig_read_stlf_waveform.pdf` and `fig_write_compression_waveform.pdf`) are captured directly from cycle-accurate simulation runs using `tb/paper_artifacts/tb_paper_journal_artifacts.v`.
+

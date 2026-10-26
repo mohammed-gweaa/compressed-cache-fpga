@@ -1,0 +1,34 @@
+name: Bug Report / Functional Defect
+description: Report a simulation mismatch, linting error, or synthesis failure.
+title: "[BUG]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting an issue in the BDI Compressed Cache Subsystem.
+  - type: dropdown
+    id: track
+    attributes:
+      label: Affected Architectural Track
+      options:
+        - "Track 1: Proposed BDI Core (rtl/bdi_cache/)"
+        - "Track 2: Baseline Conventional Cache (rtl/conventional_cache/)"
+        - "Track 3: Physical Board Demo (rtl/board_demo/)"
+        - "Simulation / Testbenches (sim/ or tb/)"
+        - "Synthesis & Timing Constraints (synth/)"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description of the Defect
+      description: Provide cycle-accurate details, observed vs. expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Exact ModelSim or Quartus commands executed.
+    validations:
+      required: true

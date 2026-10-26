@@ -8,6 +8,7 @@
 [![Board Target](https://img.shields.io/badge/Platform-Terasic_DE2i--150-red.svg)](https://www.terasic.com.tw)
 [![Timing Closure](https://img.shields.io/badge/Timing_Closure-50.00_MHz_MET_(+3.218ns)-brightgreen.svg)]()
 [![HDL Standard](https://img.shields.io/badge/HDL-Verilog_IEEE_1364--2001-orange.svg)]()
+[![RTL Verification](https://github.com/mohammed-gweaa/compressed-cache-fpga/actions/workflows/rtl_ci.yml/badge.svg)](https://github.com/mohammed-gweaa/compressed-cache-fpga/actions/workflows/rtl_ci.yml)
 
 تصميم عتادي قابل للتوليف والتصنيع (Synthesizable IP Core) لذاكرة كاش المستوى الثاني (Level-2 Cache) مدمج به خوارزمية ضغط العتاد المتوازي Base-Delta-Immediate (BDI)، مع وحدة تمرير البيانات السريع لتفادي التعارضات (Store-to-Load Forwarding - STLF)، ونظام تحكم تكيفي ديناميكي في استهلاك الطاقة عبر حجب خطوط الارتباطية (Way-Masking Power Governor).
 
@@ -29,6 +30,14 @@
 
 ---
 
+## المخطط المعماري الشامل للنظام (System Architecture)
+
+<p align="center">
+  <img src="figures/renders/fig_system_architecture.png" alt="المخطط المعماري الشامل لكاش المستوى الثاني المضغوط" width="100%">
+</p>
+
+---
+
 ## الخصائص والابتكارات المعمارية الرئيسية
 
 1. **ضاغط BDI ممرحل على 4 مراحل (4-Stage Pipelined Compressor):**
@@ -45,6 +54,52 @@
    * يراقب معدل إخفاق الكاش عبر نافذة انزلاقية من 1024 دورة ساعة. عند انخفاض العبء على الذاكرة (< 5% إخفاق)، يقلص الارتباطية تلقائياً من (8-Way $\to$ 4-Way $\to$ 2-Way $\to$ 1-Way)، مما يخفض طاقة التبديل الديناميكية لخطوط البت بنسبة تصل إلى 87.5%.
 6. **مجموعة التحكم المرجعية العادلة (Conventional Baseline Comparison):**
    * يحتوي المستودع على كاش تقليدي 8-Way يعمل بخوارزمية Tree-PLRU بنفس ميزانية الـ SRAM البالغة 16 كيلوبايت لإجراء مقارنة علمية دقيقة ومحايدة.
+
+<details>
+<summary><b>🔍 انقر هنا لاستعراض معرض المخططات المعمارية وأشكال الموجات التفاعلية (Waveforms & Diagrams)</b></summary>
+
+<br>
+
+### 1. خط أنابيب ضغط BDI المُمرحل وتوزيع الأنماط الثمانية
+<p align="center">
+  <img src="figures/renders/fig_bdi_pipeline.png" alt="خط أنابيب ضاغط BDI الرباعي" width="100%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_bdi_profiles_barchart.png" alt="توزيع تردد أنماط الضغط BDI" width="70%">
+</p>
+
+### 2. تقسيم خط التخزين المزدوج للكتل الفرعية (Slot A و Slot B)
+<p align="center">
+  <img src="figures/renders/fig_dual_subblock_layout.png" alt="مخطط التخزين المزدوج في خط الكاش" width="85%">
+</p>
+
+### 3. مسار بيانات تفادي التعارضات (STLF) وشكل الموجة الحتمي (الشكل 9)
+<p align="center">
+  <img src="figures/renders/fig_stlf_datapath.png" alt="مسار بيانات وحدة STLF ومبدلات التمرير" width="85%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_read_stlf_waveform.png" alt="شكل الموجة الزمني لتجاوز التعارضات بدون توقف" width="90%">
+</p>
+
+### 4. شكل الموجة الزمني لمراحل ضغط الكتابة (الشكل 10)
+<p align="center">
+  <img src="figures/renders/fig_write_compression_waveform.png" alt="شكل موجة ضغط الكتابة المُمرحل" width="90%">
+</p>
+
+### 5. نتائج الاختبار المقارن المباشر وشجرة استبدال Tree-PLRU
+<p align="center">
+  <img src="figures/renders/fig_comparative_results.png" alt="نتائج المقارنة مع الكاش التقليدي" width="75%">
+</p>
+<p align="center">
+  <img src="figures/renders/fig_tree_plru.png" alt="شجرة الاستبدال الثنائية 7-Bit Tree-PLRU" width="80%">
+</p>
+
+### 6. الإعداد العملي ومطابقة دبابيس لوحة Terasic DE2i-150 في المختبر
+<p align="center">
+  <img src="figures/renders/fig_de2i150_board_validation.png" alt="لوحة التطوير DE2i-150 في المختبر" width="70%">
+</p>
+
+</details>
 
 ---
 
