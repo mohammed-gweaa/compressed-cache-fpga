@@ -1,0 +1,49 @@
+CERN Open Hardware Licence Version 2 - Weakly Reciprocal
+
+Copyright (C) 2026 Mohammed Adel Gweaa (m.ghawia@uot.edu.ly)
+Supervised by Dr. Mohamed Muftah Eljhani
+Department of Computer Engineering, Faculty of Engineering, University of Tripoli, Tripoli, Libya.
+
+Preamble
+--------
+Through this CERN Open Hardware Licence Version 2 - Weakly Reciprocal
+("CERN-OHL-W"), CERN wishes to support the open hardware community by
+providing an appropriate legal framework for the collaboration,
+development and exploitation of hardware designs. It is the intent of
+CERN that this Licence can be used by anyone to share hardware
+designs. It applies to hardware design files including, but not
+limited to, schematic diagrams, layouts, circuit board designs, FPGA
+and ASIC register-transfer level (RTL) files, and mechanical designs.
+
+1. Definitions
+--------------
+1.1 "Licence" means this CERN-OHL-W.
+1.2 "Source" means information such as design files or documentation
+    which can be used to make Physical Products or other Source.
+1.3 "Covered Source" means Source that is accompanied by a Recipient Copy,
+    or that has been released under this Licence.
+1.4 "Product" means any good produced from Source, whether in physical
+    form or in the form of FPGA or ASIC gate-level netlists or bitstreams.
+1.5 "You" means an individual or legal entity exercising rights under this Licence.
+
+2. Grant of Rights
+------------------
+2.1 You may copy and distribute verbatim copies of the Covered Source,
+    provided that You keep intact all copyright notices, author attributions,
+    and references to the Department of Computer Engineering, University of Tripoli.
+2.2 You may modify the Covered Source and distribute Your modifications under
+    the terms of this Licence, provided that You prominently label the Source
+    with notices indicating that You changed the files and giving the date of any change.
+2.3 You must provide proper academic attribution in any publication, technical report,
+    or derivative hardware architecture that incorporates, builds upon, or adapts
+    this L2 BDI Compressed Cache RTL design or its mathematical compression logic.
+
+3. Disclaimer of Warranties and Limitation of Liability
+-------------------------------------------------------
+3.1 The Covered Source is provided strictly "AS IS", without warranty of any kind,
+    express or implied, including, but not limited to, the warranties of
+    merchantability, fitness for a particular purpose and non-infringement.
+3.2 In no event shall the Authors, Contributors, or University of Tripoli be liable
+    for any claim, damages or other liability, whether in an action of contract,
+    tort or otherwise, arising from, out of or in connection with the Covered Source
+    or the use or other dealings in the Covered Source.

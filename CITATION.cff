@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: "If you use this hardware architecture, testbenches, or reference this work in your research, please cite it as below."
+title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms"
+version: 1.0.0
+date-released: 2026-06-01
+license: "CERN-OHL-W-2.0"
+repository-code: "https://github.com/mohammed-gweaa/compressed-cache-fpga"
+keywords:
+  - "Cache Compression"
+  - "Base-Delta-Immediate (BDI)"
+  - "FPGA Hardware Architecture"
+  - "Cyclone IV GX"
+  - "L2 Cache Controller"
+  - "Store-to-Load Forwarding"
+  - "Low Power Memory Architecture"
+authors:
+  - family-names: "Gweaa"
+    given-names: "Mohammed Adel"
+    email: "m.ghawia@uot.edu.ly"
+    affiliation: "Department of Computer Engineering, Faculty of Engineering, University of Tripoli, Tripoli, Libya"
+  - family-names: "Eljhani"
+    given-names: "Mohamed Muftah"
+    affiliation: "Department of Computer Engineering, Faculty of Engineering, University of Tripoli, Tripoli, Libya"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Gweaa"
+      given-names: "Mohammed Adel"
+      email: "m.ghawia@uot.edu.ly"
+      affiliation: "Department of Computer Engineering, Faculty of Engineering, University of Tripoli"
+    - family-names: "Eljhani"
+      given-names: "Mohamed Muftah"
+      affiliation: "Department of Computer Engineering, Faculty of Engineering, University of Tripoli"
+  title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms"
+  year: 2026
+  institution: "University of Tripoli"

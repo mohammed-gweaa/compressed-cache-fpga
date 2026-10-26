@@ -1,0 +1,65 @@
+# =============================================================================
+# Git Ignore Configuration for Synthesizable Verilog HDL & Academic Deliverables
+# Repository: Pipelined BDI Compressed L2 Cache Subsystem for FPGA
+# Target:     Intel Cyclone IV GX / Terasic DE2i-150 Platform
+# =============================================================================
+
+# EDA Synthesis Artifacts (Intel Quartus Prime)
+**/db/
+**/incremental_db/
+**/simulation/
+**/output_files*/
+*.rpt
+*.summary
+*.done
+*.jdi
+*.pin
+*.qws
+*.smsg
+*.flow.rpt
+*.fit.rpt
+*.map.rpt
+*.sta.rpt
+*.asm.rpt
+*.eda.rpt
+*.sof
+*.pof
+*.rbf
+*.ttf
+
+# ModelSim / QuestaSim Simulation Artifacts
+work/
+**/work/
+transcript
+**/transcript
+vsim.wlf
+*.wlf
+*.vcd
+modelsim.ini
+*.mpf
+*.cr.mti
+*.mti
+
+# LaTeX Compilation Intermediate Files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+*.bak
+*.tmp
+*.orig
+
+# Operating System Artifacts
+Thumbs.db
+Desktop.ini
+.DS_Store
