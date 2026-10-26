@@ -86,6 +86,14 @@ The complete graduation defense poster is available in [`poster/EngPoster.pdf`](
   <img src="figures/renders/fig_de2i150_board_validation.png" alt="Terasic DE2i-150 Board Validation" width="70%">
 </p>
 
+### 7. Complete 17-Test Verification Waveform Document (66-Page Master PDF)
+<p align="center">
+  <a href="figures/wave_cache_bdi.pdf">
+    <img src="figures/renders/wave_cache_bdi.png" alt="Complete 66-Page L2 BDI Cache Verification Waveform" width="95%">
+  </a>
+</p>
+<p align="center"><i>Page 1 preview of the complete 66-page cycle-accurate verification waveform document available in high-resolution vector PDF at <a href="figures/wave_cache_bdi.pdf">figures/wave_cache_bdi.pdf</a>.</i></p>
+
 </details>
 
 ---
@@ -191,8 +199,9 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   ├── PHYSICAL_SYNTHESIS_AND_TIMING_REPORT.md # Static Timing & Corner Analysis Report
 │   ├── COMPARATIVE_CACHE_AUDIT.md     # In-Depth Baseline vs. BDI Engineering Audit
 │   ├── SOC_INTEGRATION_ROADMAP.md     # Multi-Core Interconnect & RISC-V Roadmap
-│   └── DE2i-150_FPGA_System_manual.pdf# Terasic Hardware Reference Manual
 ├── figures/                           # Academic Publication Vector Figures (PDF)
+│   ├── wave_cache_bdi.pdf             # Complete 66-Page Cycle-Accurate Verification Waveform (PDF)
+│   ├── renders/                       # High-Resolution Markdown & Web Preview Images
 │   └── README.md                      # Figure Catalog & Dissertation Mapping
 ├── poster/                            # Academic Graduation Poster & Deliverables
 │   ├── EngPoster.pdf                  # Master 2.0m x 1.5m Print-Ready Vector PDF

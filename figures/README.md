@@ -20,12 +20,15 @@ This directory contains high-resolution vector PDF figures documenting the micro
 | `fig_de2i150_board_validation.pdf` | Hardware lab setup photograph and pinout validation on the Terasic DE2i-150 development board (`EP4CGX150DF31C7`). | Section 3.13 (Physical Hardware Demonstration) |
 | `fig_read_stlf_waveform.pdf` | Cycle-accurate ModelSim waveform showing back-to-back RAW hazard bypass with deterministic 5-cycle read latency. | Figure 9 (Publication Artifact) |
 | `fig_write_compression_waveform.pdf` | Cycle-accurate ModelSim waveform capturing 4-stage pipelined write compression with delta selection and RAM write enable. | Figure 10 (Publication Artifact) |
+| `wave_cache_bdi.pdf` | Master 66-page cycle-accurate ModelSim verification waveform documenting all 17 unit test scenarios, state transitions, STLF bypasses, and CSR probes. | Comprehensive Verification Deliverable (Appendix) |
 
 ---
 
 ## Formats & Reproducibility
 
 * **Vector PDF Files:** Compiled in high-resolution vector PDF format to ensure zero quality degradation when scaled for large posters (up to 2.0m x 1.5m) and IEEE/ACM journal publications.
-* **In-Browser Web Renders (`figures/renders/`):** Each vector PDF has an equivalent high-resolution PNG render (180 DPI) optimized for web preview in GitHub markdown documentation and mobile devices without requiring PDF downloads.
+* **In-Browser Web Renders (`figures/renders/`):** Each vector PDF has an equivalent high-resolution PNG render (150-180 DPI) optimized for web preview in GitHub markdown documentation and mobile devices without requiring PDF downloads.
 * **Waveform Captures:** (`fig_read_stlf_waveform.pdf` and `fig_write_compression_waveform.pdf`) are captured directly from cycle-accurate simulation runs using `tb/paper_artifacts/tb_paper_journal_artifacts.v`.
+* **Full Exhaustive Waveform:** `wave_cache_bdi.pdf` captures the entire 5070 ns simulation run across all 17 architectural scenarios in a print-ready 66-page Landscape PDF format.
+
 

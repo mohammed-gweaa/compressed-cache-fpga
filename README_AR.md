@@ -99,6 +99,14 @@
   <img src="figures/renders/fig_de2i150_board_validation.png" alt="لوحة التطوير DE2i-150 في المختبر" width="70%">
 </p>
 
+### 7. وثيقة أشكال الموجات الكاملة لجميع الاختبارات الـ 17 (Master 66-Page Waveform)
+<p align="center">
+  <a href="figures/wave_cache_bdi.pdf">
+    <img src="figures/renders/wave_cache_bdi.png" alt="وثيقة أشكال الموجات الكاملة لكاش BDI (66 صفحة)" width="95%">
+  </a>
+</p>
+<p align="center"><i>معاينة الصفحة الأولى من وثيقة المحاكاة الشاملة (66 صفحة Landscape) المتوفرة بصيغة Vector PDF عالية الدقة في <a href="figures/wave_cache_bdi.pdf">figures/wave_cache_bdi.pdf</a></i></p>
+
 </details>
 
 ---
@@ -332,8 +340,9 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 │   ├── PHYSICAL_SYNTHESIS_AND_TIMING_REPORT.md # تقرير التوليف الفيزيائي والتوقيت
 │   ├── COMPARATIVE_CACHE_AUDIT.md     # تقرير التدقيق المعماري المقارن
 │   ├── SOC_INTEGRATION_ROADMAP.md     # خارطة الطريق للدمج مع معالجات RISC-V
-│   └── DE2i-150_FPGA_System_manual.pdf# دليل منصة التيرسيك DE2i-150
 ├── figures/                           # الأشكال والمخططات المتجهية عالية الدقة (PDF)
+│   ├── wave_cache_bdi.pdf             # وثيقة موجة التحقق الكاملة للاختبارات الـ 17 (66 صفحة عريضة PDF)
+│   ├── renders/                       # المعاينات الصورية عالية الدقة للعرض المباشر في المتصفح
 │   └── README.md                      # فهرس وتوصيف الأشكال ومطابقتها مع الورقة العلمية
 ├── poster/                            # البوستر الأكاديمي لمناقشة التخرج ومخرجات النشر
 │   ├── EngPoster.pdf                  # البوستر الأصلي بصيغة PDF فيكتورية جاهزة للطباعة
