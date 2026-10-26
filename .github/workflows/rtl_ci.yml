@@ -52,6 +52,24 @@ jobs:
                                 rtl/board_demo/l2_bdi_cache_top.v \
                                 rtl/board_demo/l2_bdi_cache_board_demo.v
 
+      - name: Audit Track 4: Multi-Core SoC Hierarchy Extensions Syntax
+        run: |
+          echo "=== Auditing future_work/rtl/*.v ==="
+          iverilog -Wall -t null rtl/bdi_cache/l2_ram_block.v \
+                                rtl/bdi_cache/l2_bdi_compressor.v \
+                                rtl/bdi_cache/l2_bdi_decompressor.v \
+                                rtl/bdi_cache/l2_hazard_interlock_unit.v \
+                                rtl/bdi_cache/l2_cache_storage_array.v \
+                                rtl/bdi_cache/l2_adaptive_power_governor.v \
+                                rtl/bdi_cache/l2_csr_control_bank.v \
+                                rtl/bdi_cache/l2_pipeline_input_stage.v \
+                                rtl/bdi_cache/l2_bdi_cache_top.v \
+                                future_work/rtl/l1_dcache_core.v \
+                                future_work/rtl/l1_l2_bus_arbiter.v \
+                                future_work/rtl/l2_hardware_prefetcher.v \
+                                future_work/rtl/l2_cache_controller.v \
+                                future_work/rtl/soc_cache_subsystem.v
+
   scripts-and-deliverables-audit:
     name: Automation Scripts & Release Deliverables Audit
     runs-on: ubuntu-latest
@@ -89,7 +107,10 @@ jobs:
           test -f LICENSE || exit 1
           test -f CITATION.cff || exit 1
           test -f CONTRIBUTING.md || exit 1
+          test -f future_work/README.md || exit 1
+          test -f future_work/sim/run_sim_soc.do || exit 1
           test -f synth/bdi_cache/l2_bdi_cache_top.qsf || exit 1
           test -f synth/conventional_cache/l2_conventional_cache_top.qsf || exit 1
           test -f synth/board_demo/l2_bdi_cache_board_demo.qsf || exit 1
+          test -f future_work/synth/soc_cache_subsystem.qsf || exit 1
           echo "All release artifacts and Quartus project descriptors verified."

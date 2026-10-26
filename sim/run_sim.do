@@ -22,20 +22,20 @@ vlog -work work ../rtl/bdi_cache/l2_bdi_cache_top.v
 vlog -work work ../rtl/conventional_cache/l2_conventional_cache_top.v
 
 
-# 4. Compile Verification Testbenches
+# 3. Compile Verification Testbenches
 vlog -work work ../tb/bdi_cache/tb_l2_bdi_cache_top.v
 vlog -work work ../tb/paper_artifacts/tb_paper_journal_artifacts.v
 vlog -work work ../tb/comparative/tb_l2_comparative_stress_benchmark.v
 
-# 3. Run Standalone L2 Core Testbench (STLF & 5-Cycle Latency)
+# 4. Run Standalone L2 Core Testbench (STLF & 5-Cycle Latency)
 vsim -c -t 1ps -onfinish stop work.tb_l2_bdi_cache_top
 run -all
 
-# 4. Run Journal Artifacts Verification
+# 5. Run Journal Artifacts Verification
 vsim -c -t 1ps -onfinish stop work.tb_paper_journal_artifacts
 run -all
 
-# 5. Run Head-to-Head Comparative Stress Benchmark
+# 6. Run Head-to-Head Comparative Stress Benchmark
 vsim -c -t 1ps -onfinish stop work.tb_l2_comparative_stress_benchmark
 run -all
 
