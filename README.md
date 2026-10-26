@@ -57,9 +57,9 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 
 ```text
 .
-├── rtl/                               # Synthesizable Verilog HDL IP Core
-│   ├── bdi_cache/                     # Proposed BDI Compressed L2 Cache Subsystem
-│   │   ├── l2_bdi_cache_top.v         # Master L2 Compressed Cache Top Entity
+├── rtl/                               # Synthesizable Verilog HDL IP Core (3 Isolated Tracks)
+│   ├── bdi_cache/                     # Track 1: Proposed BDI Compressed L2 Cache Subsystem (Pristine Core)
+│   │   ├── l2_bdi_cache_top.v         # Master L2 Compressed Cache Top Entity (29 Pristine Ports)
 │   │   ├── l2_bdi_compressor.v        # 4-Stage Pipelined BDI Parallel Compressor
 │   │   ├── l2_bdi_decompressor.v      # Single-Cycle Combinational Decompressor
 │   │   ├── l2_hazard_interlock_unit.v # STLF RAW Hazard Interlock & Forwarding
@@ -68,17 +68,28 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   │   ├── l2_csr_control_bank.v      # MMIO Software Control Register Bank
 │   │   ├── l2_pipeline_input_stage.v  # Retimed Request Synchronizer Stage
 │   │   └── l2_ram_block.v             # Embedded Dual-Port Block RAM Wrapper
-│   ├── conventional_cache/            # Baseline Reference Cache
+│   ├── conventional_cache/            # Track 2: Baseline Reference Cache (Scientific Control Group)
 │   │   └── l2_conventional_cache_top.v# 16 KB Conventional Uncompressed 8-Way Cache
-│   └── board_demo/                    # Physical FPGA Demonstration Wrapper
-│       └── l2_bdi_cache_board_demo.v  # DE2i-150 Physical Pin & ISSP Interface
+│   ├── board_demo/                    # Track 3: Physical FPGA Demonstration (Strictly Isolated Submodules)
+│   │   ├── l2_bdi_cache_board_demo.v  # DE2i-150 / DE2-115 Physical Pin & ISSP Interface Wrapper
+│   │   ├── l2_bdi_cache_top.v         # Dedicated Standalone Top Entity with Debug Taps
+│   │   ├── l2_bdi_compressor.v        # Standalone Compressor Copy
+│   │   ├── l2_bdi_decompressor.v      # Standalone Decompressor Copy
+│   │   ├── l2_hazard_interlock_unit.v # Standalone STLF Unit Copy
+│   │   ├── l2_cache_storage_array.v   # Standalone Storage Array Copy
+│   │   ├── l2_adaptive_power_governor.v # Standalone Power Governor Copy
+│   │   ├── l2_csr_control_bank.v      # Standalone CSR Bank Copy
+│   │   ├── l2_pipeline_input_stage.v  # Standalone Pipeline Input Copy
+│   │   └── l2_ram_block.v             # Standalone RAM Block Copy
+│   └── README.md                      # In-Depth Guide to RTL Architecture & Track Differences
 ├── tb/                                # Verification Testbenches
 │   ├── bdi_cache/                     # Proposed BDI Cache Testbenches
 │   │   └── tb_l2_bdi_cache_top.v      # 17-Scenario Exhaustive Core Testbench
 │   ├── comparative/                   # Head-to-Head Comparative Stress Benchmark
 │   │   └── tb_l2_comparative_stress_benchmark.v # Unbiased Benchmark vs Baseline
-│   └── paper_artifacts/               # Publication Waveform Capture
-│       └── tb_paper_journal_artifacts.v # Academic Figures 9 & 10 Testbench
+│   ├── paper_artifacts/               # Publication Waveform Capture
+│   │   └── tb_paper_journal_artifacts.v # Academic Figures 9 & 10 Testbench
+│   └── README.md                      # Testbench Suite & Verification Guide
 ├── sim/                               # Simulation Scripts (ModelSim / QuestaSim)
 │   ├── run_sim.do                     # Automated Compilation & Regression Suite
 │   ├── run_simulations.bat            # Windows Command-Line Batch Runner
@@ -86,9 +97,10 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   ├── wave_l2_bdi_cache_top.do       # Full Hierarchical Waveform Configuration
 │   ├── wave_comparative_benchmark.do  # Comparative Analysis Waveform
 │   ├── wave_paper_read_stlf.do        # STLF Hazard Bypass Waveform
-│   └── wave_paper_write_compression.do# Pipelined Write Compression Waveform
+│   ├── wave_paper_write_compression.do# Pipelined Write Compression Waveform
+│   └── README.md                      # Simulation & Waveform Execution Guide
 ├── synth/                             # FPGA Synthesis & Implementation (Quartus Prime)
-│   ├── bdi_cache/                     # Proposed BDI Cache Synthesis Project
+│   ├── bdi_cache/                     # Track 1: Proposed BDI Cache Synthesis (Virtual Pins)
 │   │   ├── l2_bdi_cache_top.qpf       # Quartus Project File
 │   │   ├── l2_bdi_cache_top.qsf       # Settings & Constraints
 │   │   ├── l2_bdi_cache_top.sdc       # Timing Constraints (50.00 MHz Clocks)
@@ -96,16 +108,23 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   │   ├── TIMING_CLOSURE_100MHz_ANALYSIS.txt # 100MHz vs 50MHz Timing Report
 │   │   ├── l2_bdi_cache_top_rtl_viewer.pdf # Gate-Level Netlist Schematic
 │   │   └── l2_bdi_cache_top_rtl_viewer.png
-│   ├── conventional_cache/            # Baseline Conventional Cache Project
+│   ├── conventional_cache/            # Track 2: Baseline Conventional Cache Project (Virtual Pins)
 │   │   ├── l2_conventional_cache_top.qpf
 │   │   ├── l2_conventional_cache_top.qsf
 │   │   ├── l2_conventional_cache_top.sdc
 │   │   └── virtual_pins_conv.tcl
-│   └── board_demo/                    # Physical Hardware Board Demo Project
-│       ├── l2_bdi_cache_board_demo.qpf
-│       ├── l2_bdi_cache_board_demo.qsf
-│       ├── assign_board_demo_pins.tcl # DE2i-150 Physical Pin Constraints (106 Pins)
-│       └── issp_scripts/              # Altera ISSP JTAG Automation Scripts
+│   ├── board_demo/                    # Track 3: Physical Hardware Board Demo (106 Physical Pins)
+│   │   ├── l2_bdi_cache_board_demo.qpf
+│   │   ├── l2_bdi_cache_board_demo.qsf# Compiles Strictly from rtl/board_demo/ (Zero Cross-Reference)
+│   │   ├── assign_board_demo_pins.tcl # DE2i-150 Physical Pin Constraints (106 Pins)
+│   │   └── issp_scripts/              # Altera ISSP JTAG Automation Scripts & Guides
+│   │       ├── README_ISSP_GUIDE.md   # Complete JTAG ISSP Automation Manual
+│   │       ├── issp_signals.py        # Python Bitfield Mapping Library
+│   │       ├── issp_read_telemetry.py # Live Telemetry Reader
+│   │       ├── issp_inject_stimulus.py# Interactive Stimulus Injector
+│   │       ├── issp_auto_validate.py  # Automated Hardware Validation Suite
+│   │       └── issp_driver.tcl        # Quartus HPS/FPGA Tcl Bridge
+│   └── README.md                      # Synthesis, STA, and Virtual vs Physical Pins Guide
 ├── docs/                              # Technical Engineering Specifications
 │   ├── MASTER_ARCHITECTURE_SPECIFICATION.md # Full Microarchitecture Reference Manual
 │   ├── PHYSICAL_SYNTHESIS_AND_TIMING_REPORT.md # Static Timing & Corner Analysis Report
@@ -121,8 +140,62 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 ├── CITATION.cff                       # Machine-Readable Citation Metadata
 ├── LICENSE                            # CERN Open Hardware Licence v2 - Weakly Reciprocal
 ├── run_modelsim.bat                   # Quick Root Shortcut for ModelSim Simulation
-└── README.md                          # Repository Documentation
+└── README.md                          # Repository Master Documentation
 ```
+
+---
+
+## Architectural Tracks & Code Isolation Rationale
+
+To maintain strict scientific integrity, prevent debug probe overhead from corrupting IP benchmark data, and adhere to modular hardware engineering standards, the repository implements **three independent architectural tracks**:
+
+```mermaid
+graph TD
+    subgraph Track1 ["Track 1: Proposed BDI Cache IP Core"]
+        RTL1["rtl/bdi_cache/<br>• l2_bdi_cache_top.v (29 Pristine Ports)<br>• 8 Submodules (Pipelined BDI, STLF, Dual-Slot)"]
+        SYNTH1["synth/bdi_cache/<br>• Virtual Pins (virtual_pins_bdi.tcl)<br>• Timing Closed at 50 MHz (+3.218ns)<br>• 19,998 LEs / 8,405 FFs / 160K RAM bits"]
+        TB1["tb/bdi_cache/ & tb/paper_artifacts/<br>• 17 Unit Tests (100% Passed)<br>• IEEE Timing Diagram Waveforms"]
+        RTL1 --> SYNTH1
+        RTL1 --> TB1
+    end
+
+    subgraph Track2 ["Track 2: Baseline Conventional Cache"]
+        RTL2["rtl/conventional_cache/<br>• l2_conventional_cache_top.v<br>• 16 KB 8-Way Tree-PLRU Baseline"]
+        SYNTH2["synth/conventional_cache/<br>• Virtual Pins (virtual_pins_conv.tcl)<br>• 3,554 LEs / 1,100 FFs / 142K RAM bits"]
+        TB2["tb/comparative/<br>• Side-by-Side Head-to-Head Benchmark<br>• 79 Hits vs 58 Hits (+36.2%)"]
+        RTL2 --> SYNTH2
+        RTL2 --> TB2
+    end
+
+    subgraph Track3 ["Track 3: Physical FPGA Board Demo"]
+        RTL3["rtl/board_demo/<br>• Strictly Isolated Submodule Copies<br>• Zero Shared Code with Track 1<br>• l2_bdi_cache_board_demo.v (Top Wrapper)"]
+        SYNTH3["synth/board_demo/<br>• 106 Physical Pins (assign_board_demo_pins.tcl)<br>• Compiles Strictly from rtl/board_demo/<br>• Bitstream (.sof) Generation for DE2i-150"]
+        ISSP3["synth/board_demo/issp_scripts/<br>• Python / Tcl JTAG Automation<br>• In-System Sources & Probes Telemetry"]
+        RTL3 --> SYNTH3
+        SYNTH3 --> ISSP3
+    end
+
+    style Track1 fill:#e8f4fd,stroke:#0284c7,stroke-width:2px
+    style Track2 fill:#f1f5f9,stroke:#64748b,stroke-width:2px
+    style Track3 fill:#fef3c7,stroke:#d97706,stroke-width:2px
+```
+
+### Key Differences Between the Three Tracks
+
+1. **Track 1 (`rtl/bdi_cache/` & `synth/bdi_cache/`):**
+   * **Pristine Academic Core:** Contains the pure research implementation without any board-specific pins, switches, debouncers, or diagnostic probes.
+   * **Virtual Pins Synthesis:** Quartus assigns all 29 I/O ports to virtual pins so that synthesis accurately evaluates internal FPGA logic resource utilization and true internal silicon routing delay without being bottlenecked by physical FPGA package pin limits or pad delays.
+   * **Verification Target:** Direct target of unit testbenches and publication waveform generation scripts.
+
+2. **Track 2 (`rtl/conventional_cache/` & `synth/conventional_cache/`):**
+   * **Scientific Control Baseline:** Standard 16 KB uncompressed cache operating under identical SRAM capacity and clock frequency constraints.
+   * **Validation Role:** Provides the comparative baseline proving that the proposed BDI cache achieves **+36.2% more hits**, **-40% fewer DRAM evictions**, and **0 RAW hazard stalls** (vs 20 stalls).
+
+3. **Track 3 (`rtl/board_demo/` & `synth/board_demo/`):**
+   * **Physical Demonstration Wrapper:** Connects the cache subsystem to physical DE2i-150 / DE2-115 board resources (50 MHz oscillator, push-buttons, slide switches, 7-segment hex displays, and LEDs).
+   * **Complete Code Isolation:** To satisfy the strict rule *"حطها بروحها، ما فيش تشارك في الأكواد"* (Keep them separate, zero shared code), `rtl/board_demo/` contains **its own independent, localized copies** of all RTL submodules. Any debug probe taps (e.g., `dbg_compress_type`, `dbg_fwd_valid`) or ISSP JTAG IP cores remain completely self-contained within `rtl/board_demo/` and can never alter or corrupt the pristine Track 1 research IP core.
+   * **Physical Pin Mapping:** Synthesized with 106 physical package pin assignments without virtual pins, producing a ready-to-program `.sof` bitstream.
+   * **Automated ISSP JTAG Testing:** Equipped with Python and Tcl automation scripts under `synth/board_demo/issp_scripts/` for live in-system cache stimulus injection and telemetry reading.
 
 ---
 
