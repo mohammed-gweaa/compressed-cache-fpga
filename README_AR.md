@@ -298,7 +298,9 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 │   ├── comparative/                   # بنك المقارنة الإجهادي المباشر بين التصميمين
 │   ├── paper_artifacts/               # بنك التقاط أشكال الموجات المنشورة في الورقة العلمية
 │   └── README.md                      # دليل بنوك الاختبار وحالات الفحص
-├── sim/                               # أدوات وسكربتات المحاكاة (ModelSim / QuestaSim)
+├── sim/                               # أدوات وسكربتات ومشاريع المحاكاة (ModelSim / QuestaSim)
+│   ├── l2_cache.mpf                   # ملف مشروع ModelSim الجاهز لنواة كاش BDI وحزم الاختبار
+│   ├── l2_cache_conventional.mpf     # ملف مشروع ModelSim الجاهز للكاش التقليدي المرجعي
 │   ├── run_sim.do                     # سكربت تصريف وتشغيل المحاكاة الشاملة
 │   ├── run_sim_conventional.do        # سكربت محاكاة الكاش التقليدي
 │   ├── run_simulations.bat            # سكربت تشغيل المحاكاة من الطرفية في ويندوز

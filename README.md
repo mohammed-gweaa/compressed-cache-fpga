@@ -148,7 +148,10 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   │   └── tb_paper_journal_artifacts.v # Academic Figures 9 & 10 Testbench
 │   └── README.md                      # Testbench Suite & Verification Guide
 ├── sim/                               # Simulation Scripts (ModelSim / QuestaSim)
+│   ├── l2_cache.mpf                   # ModelSim Project File (BDI Cache & Complete Test Suite)
+│   ├── l2_cache_conventional.mpf     # ModelSim Project File (Conventional Baseline Cache)
 │   ├── run_sim.do                     # Automated Compilation & Regression Suite
+│   ├── run_sim_conventional.do        # Baseline Conventional Cache Simulation Suite
 │   ├── run_simulations.bat            # Windows Command-Line Batch Runner
 │   ├── RUN_WAVEFORM_L2_TOP.bat        # Interactive GUI Launcher
 │   ├── wave_l2_bdi_cache_top.do       # Full Hierarchical Waveform Configuration

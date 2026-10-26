@@ -8,6 +8,8 @@ This directory contains the simulation scripts, batch automation, and waveform v
 
 ```text
 sim/
+├── l2_cache.mpf                   # ModelSim Project File for Proposed BDI Cache Suite
+├── l2_cache_conventional.mpf     # ModelSim Project File for Conventional Baseline Cache
 ├── run_sim.do                     # Automated compilation and regression test script (BDI Core)
 ├── run_sim_conventional.do        # Standalone regression test script (Conventional Baseline)
 ├── run_simulations.bat            # Windows batch script to run simulation in console mode

@@ -36,7 +36,6 @@ vsim.wlf
 *.wlf
 *.vcd
 modelsim.ini
-*.mpf
 *.cr.mti
 *.mti
 
