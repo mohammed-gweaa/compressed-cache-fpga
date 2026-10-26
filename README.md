@@ -29,7 +29,7 @@ The complete graduation defense poster is available in [`poster/EngPoster.pdf`](
 * **Dual Sub-Block Packing (Slot A / Slot B):** Cohabitats two compressed 128-bit blocks into a single 288-bit physical cache line, doubling logical cache capacity without additional physical SRAM cells.
 * **Store-to-Load Forwarding (STLF):** Detects Read-After-Write (RAW) pipeline hazards across compressor stages and forwards write data directly to the output, eliminating 100% of pipeline hazard stalls (0 stalls vs 20 stalls in the baseline cache).
 * **Adaptive Power Governor:** Dynamically scales set associativity (8-way, 4-way, 2-way, 1-way) via CSR and epoch counters, cutting dynamic bitline switching energy by up to 87.5% under low memory pressure.
-* **Fair Baseline Comparison:** Includes an uncompressed 8-way Tree-PLRU conventional cache (`rtl/l2_conventional_cache_top.v`) under identical 16 KB SRAM budget for head-to-head architectural validation.
+* **Fair Baseline Comparison:** Includes an uncompressed 8-way Tree-PLRU conventional cache (`rtl/conventional_cache/l2_conventional_cache_top.v`) under identical 16 KB SRAM budget for head-to-head architectural validation.
 
 ---
 
@@ -58,21 +58,27 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 ```text
 .
 ├── rtl/                               # Synthesizable Verilog HDL IP Core
-│   ├── l2_bdi_cache_top.v             # Master L2 Compressed Cache Subsystem
-│   ├── l2_bdi_compressor.v            # 4-Stage Pipelined BDI Compressor
-│   ├── l2_bdi_decompressor.v          # 1-Cycle Combinational Decompressor
-│   ├── l2_hazard_interlock_unit.v     # STLF Bypass & RAW Hazard Interlock
-│   ├── l2_cache_storage_array.v       # 8-Way Dual-Slot Synchronous Cache Array
-│   ├── l2_adaptive_power_governor.v   # Dynamic Associativity Power Governor
-│   ├── l2_csr_control_bank.v          # MMIO Software Control Register Bank
-│   ├── l2_conventional_cache_top.v    # 16 KB Baseline Reference Cache
-│   ├── l2_pipeline_input_stage.v      # Retimed Input Bus Synchronizer
-│   ├── l2_ram_block.v                 # Embedded Dual-Port Block RAM Wrapper
-│   └── l2_bdi_cache_board_demo.v      # Physical DE2i-150 Board Demo & ISSP
+│   ├── bdi_cache/                     # Proposed BDI Compressed L2 Cache Subsystem
+│   │   ├── l2_bdi_cache_top.v         # Master L2 Compressed Cache Top Entity
+│   │   ├── l2_bdi_compressor.v        # 4-Stage Pipelined BDI Parallel Compressor
+│   │   ├── l2_bdi_decompressor.v      # Single-Cycle Combinational Decompressor
+│   │   ├── l2_hazard_interlock_unit.v # STLF RAW Hazard Interlock & Forwarding
+│   │   ├── l2_cache_storage_array.v   # 8-Way Dual-Slot Synchronous Cache Array
+│   │   ├── l2_adaptive_power_governor.v # Dynamic Set-Associativity Governor
+│   │   ├── l2_csr_control_bank.v      # MMIO Software Control Register Bank
+│   │   ├── l2_pipeline_input_stage.v  # Retimed Request Synchronizer Stage
+│   │   └── l2_ram_block.v             # Embedded Dual-Port Block RAM Wrapper
+│   ├── conventional_cache/            # Baseline Reference Cache
+│   │   └── l2_conventional_cache_top.v# 16 KB Conventional Uncompressed 8-Way Cache
+│   └── board_demo/                    # Physical FPGA Demonstration Wrapper
+│       └── l2_bdi_cache_board_demo.v  # DE2i-150 Physical Pin & ISSP Interface
 ├── tb/                                # Verification Testbenches
-│   ├── tb_l2_bdi_cache_top.v          # 17-Scenario Exhaustive Core Testbench
-│   ├── tb_l2_comparative_stress_benchmark.v # Head-to-Head Comparative Stress Benchmark
-│   └── tb_paper_journal_artifacts.v   # Academic Waveform Capture Testbench
+│   ├── bdi_cache/                     # Proposed BDI Cache Testbenches
+│   │   └── tb_l2_bdi_cache_top.v      # 17-Scenario Exhaustive Core Testbench
+│   ├── comparative/                   # Head-to-Head Comparative Stress Benchmark
+│   │   └── tb_l2_comparative_stress_benchmark.v # Unbiased Benchmark vs Baseline
+│   └── paper_artifacts/               # Publication Waveform Capture
+│       └── tb_paper_journal_artifacts.v # Academic Figures 9 & 10 Testbench
 ├── sim/                               # Simulation Scripts (ModelSim / QuestaSim)
 │   ├── run_sim.do                     # Automated Compilation & Regression Suite
 │   ├── run_simulations.bat            # Windows Command-Line Batch Runner
@@ -82,20 +88,24 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   ├── wave_paper_read_stlf.do        # STLF Hazard Bypass Waveform
 │   └── wave_paper_write_compression.do# Pipelined Write Compression Waveform
 ├── synth/                             # FPGA Synthesis & Implementation (Quartus Prime)
-│   ├── l2_bdi_cache_top.qpf           # BDI Cache Top Project File
-│   ├── l2_bdi_cache_top.qsf           # BDI Cache Settings & Constraints
-│   ├── l2_bdi_cache_top.sdc           # Timing Constraints (50.00 MHz Clocks)
-│   ├── l2_conventional_cache_top.qpf  # Baseline Project File
-│   ├── l2_conventional_cache_top.qsf  # Baseline Settings
-│   ├── l2_conventional_cache_top.sdc  # Baseline Timing Constraints
-│   ├── l2_bdi_cache_board_demo.qpf    # Hardware Board Demo Project
-│   ├── l2_bdi_cache_board_demo.qsf    # Hardware Board Demo Settings
-│   ├── assign_board_demo_pins.tcl     # DE2i-150 Physical Pin Constraints
-│   ├── virtual_pins_bdi.tcl           # Virtual Pins TCL for Core Synthesis
-│   ├── virtual_pins_conv.tcl          # Virtual Pins TCL for Baseline
-│   ├── issp_scripts/                  # Altera ISSP JTAG Automation Scripts
-│   ├── l2_bdi_cache_top_rtl_viewer.pdf# Synthesized Gate-Level Schematic
-│   └── l2_bdi_cache_top_rtl_viewer.png
+│   ├── bdi_cache/                     # Proposed BDI Cache Synthesis Project
+│   │   ├── l2_bdi_cache_top.qpf       # Quartus Project File
+│   │   ├── l2_bdi_cache_top.qsf       # Settings & Constraints
+│   │   ├── l2_bdi_cache_top.sdc       # Timing Constraints (50.00 MHz Clocks)
+│   │   ├── virtual_pins_bdi.tcl       # Virtual Pins TCL Script
+│   │   ├── TIMING_CLOSURE_100MHz_ANALYSIS.txt # 100MHz vs 50MHz Timing Report
+│   │   ├── l2_bdi_cache_top_rtl_viewer.pdf # Gate-Level Netlist Schematic
+│   │   └── l2_bdi_cache_top_rtl_viewer.png
+│   ├── conventional_cache/            # Baseline Conventional Cache Project
+│   │   ├── l2_conventional_cache_top.qpf
+│   │   ├── l2_conventional_cache_top.qsf
+│   │   ├── l2_conventional_cache_top.sdc
+│   │   └── virtual_pins_conv.tcl
+│   └── board_demo/                    # Physical Hardware Board Demo Project
+│       ├── l2_bdi_cache_board_demo.qpf
+│       ├── l2_bdi_cache_board_demo.qsf
+│       ├── assign_board_demo_pins.tcl # DE2i-150 Physical Pin Constraints (106 Pins)
+│       └── issp_scripts/              # Altera ISSP JTAG Automation Scripts
 ├── docs/                              # Technical Engineering Specifications
 │   ├── MASTER_ARCHITECTURE_SPECIFICATION.md # Full Microarchitecture Reference Manual
 │   ├── PHYSICAL_SYNTHESIS_AND_TIMING_REPORT.md # Static Timing & Corner Analysis Report

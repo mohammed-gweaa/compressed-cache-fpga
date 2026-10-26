@@ -90,7 +90,7 @@ Every module within `rtl` has been analyzed at the gate, register, and port leve
 ---
 
 ### 3.1. `l2_bdi_cache_top.v` (Master Subsystem Top-Level)
-* **File Path:** [`rtl/l2_bdi_cache_top.v`](../rtl/l2_bdi_cache_top.v)
+* **File Path:** [`rtl/bdi_cache/l2_bdi_cache_top.v`](../rtl/bdi_cache/l2_bdi_cache_top.v)
 * **Entity Type:** Master Subsystem Top Entity.
 * **Standard:** IEEE 1364-2001 (Verilog HDL).
 
@@ -133,7 +133,7 @@ Top-level core of the production-grade L2 cache subsystem. It encapsulates the f
 ---
 
 ### 3.2. `l2_bdi_compressor.v` (4-Stage Pipelined Compressor & DCB Engine)
-* **File Path:** [`rtl/l2_bdi_compressor.v`](../rtl/l2_bdi_compressor.v)
+* **File Path:** [`rtl/bdi_cache/l2_bdi_compressor.v`](../rtl/bdi_cache/l2_bdi_compressor.v)
 * **Entity Type:** 4-Stage Arithmetic Pipeline Core.
 
 #### Functional Role & Architecture:
@@ -167,7 +167,7 @@ Executes parallel base-delta arithmetic on 256-bit cache lines to discover redun
 ---
 
 ### 3.3. `l2_bdi_decompressor.v` (1-Cycle Combinational Parallel Signed Adders)
-* **File Path:** [`rtl/l2_bdi_decompressor.v`](../rtl/l2_bdi_decompressor.v)
+* **File Path:** [`rtl/bdi_cache/l2_bdi_decompressor.v`](../rtl/bdi_cache/l2_bdi_decompressor.v)
 * **Entity Type:** Pure Combinational Logic Module.
 
 #### Functional Role & Architecture:
@@ -182,7 +182,7 @@ Reconstructs the full 256-bit uncompressed cache line from the 137-bit compresse
 ---
 
 ### 3.4. `l2_hazard_interlock_unit.v` (Store-to-Load Forwarding & RAW Interlock)
-* **File Path:** [`rtl/l2_hazard_interlock_unit.v`](../rtl/l2_hazard_interlock_unit.v)
+* **File Path:** [`rtl/bdi_cache/l2_hazard_interlock_unit.v`](../rtl/bdi_cache/l2_hazard_interlock_unit.v)
 * **Entity Type:** Pipeline Dependency & Data Forwarding Controller.
 
 #### Functional Role & Architecture:
@@ -195,7 +195,7 @@ Eliminates the Read-After-Write (RAW) hazard penalty. When an incoming read matc
 ---
 
 ### 3.5. `l2_adaptive_power_governor.v` (1024-Cycle Epoch PMIC & Dynamic Associativity)
-* **File Path:** [`rtl/l2_adaptive_power_governor.v`](../rtl/l2_adaptive_power_governor.v)
+* **File Path:** [`rtl/bdi_cache/l2_adaptive_power_governor.v`](../rtl/bdi_cache/l2_adaptive_power_governor.v)
 * **Entity Type:** Autonomous Epoch Hardware PMIC.
 
 #### Functional Role & Architecture:
@@ -210,7 +210,7 @@ Hardware PMIC tracking cache miss behavior across $N_{\text{epoch}} = 1024$ acce
 ---
 
 ### 3.6. `l2_csr_control_bank.v` (Memory-Mapped Software-Directed CSR Bank)
-* **File Path:** [`rtl/l2_csr_control_bank.v`](../rtl/l2_csr_control_bank.v)
+* **File Path:** [`rtl/bdi_cache/l2_csr_control_bank.v`](../rtl/bdi_cache/l2_csr_control_bank.v)
 * **Entity Type:** MMIO Register File.
 
 #### Register Map:
@@ -229,7 +229,7 @@ Hardware PMIC tracking cache miss behavior across $N_{\text{epoch}} = 1024$ acce
 ---
 
 ### 3.7. `l2_cache_storage_array.v` (Synchronous 8-Way Dual-Slot M9K BRAM Core)
-* **File Path:** [`rtl/l2_cache_storage_array.v`](../rtl/l2_cache_storage_array.v)
+* **File Path:** [`rtl/bdi_cache/l2_cache_storage_array.v`](../rtl/bdi_cache/l2_cache_storage_array.v)
 * **Entity Type:** Embedded Synchronous Cache Storage Core.
 
 #### Functional Role & Architecture:
@@ -244,21 +244,21 @@ The core synchronous memory array of the L2 cache, mapped to 80 physical M9K Blo
 ---
 
 ### 3.8. `l2_ram_block.v` (True Dual-Port 64x137b Embedded M9K Primitive)
-* **File Path:** [`rtl/l2_ram_block.v`](../rtl/l2_ram_block.v)
+* **File Path:** [`rtl/bdi_cache/l2_ram_block.v`](../rtl/bdi_cache/l2_ram_block.v)
 * **Entity Type:** Synchronous Embedded RAM Macro.
 * Inferred as hardware M9K blocks (`(* ramstyle = "M9K" *)`). Depth = 64 sets, Width = 137 bits. Provides separate read (`raddr`, `rden`, `dout`) and write (`waddr`, `wren`, `din`) synchronous ports.
 
 ---
 
 ### 3.9. `l2_pipeline_input_stage.v` (4-Stage Retiming Delay Bus Synchronizer)
-* **File Path:** [`rtl/l2_pipeline_input_stage.v`](../rtl/l2_pipeline_input_stage.v)
+* **File Path:** [`rtl/bdi_cache/l2_pipeline_input_stage.v`](../rtl/bdi_cache/l2_pipeline_input_stage.v)
 * **Entity Type:** Synchronous Retiming Pipeline Stage.
 * Implements 4-stage shift registers for address (`addr_d1`..`addr_d4`), selection (`sel_d1`..`sel_d4`), and write-enable (`we_d1`..`we_d4`), aligning frontend control vectors with the 4-stage BDI compressor arithmetic delay.
 
 ---
 
 ### 3.10. `l2_conventional_cache_top.v` (Baseline Uncompressed Reference Core)
-* **File Path:** [`rtl/l2_conventional_cache_top.v`](../rtl/l2_conventional_cache_top.v)
+* **File Path:** [`rtl/conventional_cache/l2_conventional_cache_top.v`](../rtl/conventional_cache/l2_conventional_cache_top.v)
 * **Entity Type:** Baseline Monolithic Reference Cache.
 * Standard 16 KB 8-way set-associative cache with 3-cycle read hit latency, fixed 8-way associativity, standard RAW hazard stalls (no STLF), and uncompressed 256-bit lines (no cohabitation). Provides the rigorous baseline for all comparative metrics.
 
@@ -285,7 +285,7 @@ The core synchronous memory array of the L2 cache, mapped to 80 physical M9K Blo
 ---
 
 ### 3.13. `l2_bdi_cache_board_demo.v` (DE2i-150 Physical Hardware Demo & ISSP JTAG)
-* **File Path:** [`rtl/l2_bdi_cache_board_demo.v`](../rtl/l2_bdi_cache_board_demo.v)
+* **File Path:** [`rtl/board_demo/l2_bdi_cache_board_demo.v`](../rtl/board_demo/l2_bdi_cache_board_demo.v)
 * Physical FPGA prototype wrapper for Terasic DE2i-150 board. Connects Intel In-System Sources and Probes (ISSP) JTAG IP, 7-segment hex displays, slide switches, and status LEDs for live board validation.
 
 ---

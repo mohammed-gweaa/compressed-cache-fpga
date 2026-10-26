@@ -122,8 +122,8 @@ The subsystem architecture was developed to satisfy all eight realistic engineer
 ## 7. Static Timing Constraints File Reference (`.sdc`)
 
 Both projects utilize dedicated, explicit Synopsys Design Constraints (`.sdc`) files:
-* Proposed Subsystem: `synth/l2_bdi_cache_top.sdc`
-* Baseline Benchmark: `synth/l2_conventional_cache_top.sdc`
+* Proposed Subsystem: `synth/bdi_cache/l2_bdi_cache_top.sdc`
+* Baseline Benchmark: `synth/conventional_cache/l2_conventional_cache_top.sdc`
 
 ```tcl
 # Core Clock Constraint Definition (50.00 MHz Target)

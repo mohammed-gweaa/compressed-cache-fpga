@@ -8,17 +8,17 @@ vlib work
 vmap work work
 
 # 1. Compile Design and Testbench
-vlog -work work ../rtl/l2_bdi_compressor.v
-vlog -work work ../rtl/l2_bdi_decompressor.v
-vlog -work work ../rtl/l2_hazard_interlock_unit.v
-vlog -work work ../rtl/l2_csr_control_bank.v
-vlog -work work ../rtl/l2_adaptive_power_governor.v
-vlog -work work ../rtl/l2_ram_block.v
-vlog -work work ../rtl/l2_cache_storage_array.v
-vlog -work work ../rtl/l2_pipeline_input_stage.v
-vlog -work work ../rtl/l2_bdi_cache_top.v
-vlog -work work ../rtl/l2_conventional_cache_top.v
-vlog -work work ../tb/tb_paper_journal_artifacts.v
+vlog -work work ../rtl/bdi_cache/l2_bdi_compressor.v
+vlog -work work ../rtl/bdi_cache/l2_bdi_decompressor.v
+vlog -work work ../rtl/bdi_cache/l2_hazard_interlock_unit.v
+vlog -work work ../rtl/bdi_cache/l2_csr_control_bank.v
+vlog -work work ../rtl/bdi_cache/l2_adaptive_power_governor.v
+vlog -work work ../rtl/bdi_cache/l2_ram_block.v
+vlog -work work ../rtl/bdi_cache/l2_cache_storage_array.v
+vlog -work work ../rtl/bdi_cache/l2_pipeline_input_stage.v
+vlog -work work ../rtl/bdi_cache/l2_bdi_cache_top.v
+vlog -work work ../rtl/conventional_cache/l2_conventional_cache_top.v
+vlog -work work ../tb/paper_artifacts/tb_paper_journal_artifacts.v
 
 # 2. Launch Simulation with full signal visibility
 vsim -voptargs=+acc work.tb_paper_journal_artifacts

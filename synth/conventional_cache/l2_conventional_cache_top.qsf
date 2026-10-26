@@ -1,20 +1,12 @@
 set_global_assignment -name FAMILY "Cyclone IV GX"
 set_global_assignment -name DEVICE EP4CGX150DF31C7
-set_global_assignment -name TOP_LEVEL_ENTITY l2_bdi_cache_top
+set_global_assignment -name TOP_LEVEL_ENTITY l2_conventional_cache_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 22.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "12:00:00  OCTOBER 16, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.0 Standard Edition"
-set_global_assignment -name SDC_FILE l2_bdi_cache_top.sdc
-set_global_assignment -name VERILOG_FILE ../rtl/l2_bdi_compressor.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_bdi_decompressor.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_hazard_interlock_unit.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_csr_control_bank.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_adaptive_power_governor.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_ram_block.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_cache_storage_array.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_pipeline_input_stage.v
-set_global_assignment -name VERILOG_FILE ../rtl/l2_bdi_cache_top.v
-set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files_bdi
+set_global_assignment -name SDC_FILE l2_conventional_cache_top.sdc
+set_global_assignment -name VERILOG_FILE ../../rtl/conventional_cache/l2_conventional_cache_top.v
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files_conv
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 1
@@ -29,8 +21,8 @@ set_global_assignment -name POWER_USE_INPUT_FILES ON
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name POWER_DEFAULT_INPUT_IO_TOGGLE_RATE 12.5%
-set_global_assignment -name POWER_INPUT_FILE_NAME simulation/modelsim/l2_bdi_cache_power.vcd -section_id l2_bdi_cache_power.vcd
-set_instance_assignment -name POWER_READ_INPUT_FILE l2_bdi_cache_power.vcd -to l2_bdi_cache_top
+set_global_assignment -name POWER_INPUT_FILE_NAME simulation/modelsim/l2_conventional_cache_power.vcd -section_id l2_conventional_cache_power.vcd
+set_instance_assignment -name POWER_READ_INPUT_FILE l2_conventional_cache_power.vcd -to l2_conventional_cache_top
 set_global_assignment -name EDA_SIMULATION_TOOL "ModelSim (Verilog)"
 set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda_simulation
 set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation

@@ -206,8 +206,8 @@ Power dissipation was quantified using **Intel Quartus Prime PowerPlay Analyzer*
 Because the standalone Level-2 cache interfaces operate on full 256-bit data words and 32-bit addresses (over 990 I/O ports), direct pin assignment to physical FPGA I/O balls would exceed the physical package pin limits of standard FPGA chips. 
 
 To ensure **100% reproducible, error-free, and unbiased synthesis**, dedicated Virtual Pin TCL constraint scripts were developed:
-* [`virtual_pins_bdi.tcl`](../synth/virtual_pins_bdi.tcl): Virtualizes 999 I/O ports for `l2_bdi_cache_top`, excluding only the global clock net `clk`.
-* [`virtual_pins_conv.tcl`](../synth/virtual_pins_conv.tcl): Virtualizes 996 I/O ports for `l2_conventional_cache_top`, excluding `clk`.
+* [`virtual_pins_bdi.tcl`](../synth/bdi_cache/virtual_pins_bdi.tcl): Virtualizes 999 I/O ports for `l2_bdi_cache_top`, excluding only the global clock net `clk`.
+* [`virtual_pins_conv.tcl`](../synth/conventional_cache/virtual_pins_conv.tcl): Virtualizes 996 I/O ports for `l2_conventional_cache_top`, excluding `clk`.
 * `virtual_pins_soc.tcl`: Virtualizes 1,172 I/O ports for the full `soc_cache_subsystem`.
 
 These scripts eliminate synthetic pin multiplexing distortions and allow the Quartus Fitter to optimize internal core routing without artificial I/O pad congestion.
@@ -215,9 +215,9 @@ These scripts eliminate synthetic pin multiplexing distortions and allow the Qua
 ### 5.5 Hardware Board Demonstration & In-System Signal Probe (ISSP) Testbed
 
 A dedicated, fully functional hardware demonstration top-level module has been engineered and synthesized:
-* **Top Entity:** [`l2_bdi_cache_board_demo.v`](../rtl/l2_bdi_cache_board_demo.v)
-* **Quartus Project:** [`l2_bdi_cache_board_demo.qpf`](../synth/l2_bdi_cache_board_demo.qpf) / [`l2_bdi_cache_board_demo.qsf`](../synth/l2_bdi_cache_board_demo.qsf)
-* **Pin Constraints:** [`assign_board_demo_pins.tcl`](../synth/assign_board_demo_pins.tcl)
+* **Top Entity:** [`l2_bdi_cache_board_demo.v`](../rtl/board_demo/l2_bdi_cache_board_demo.v)
+* **Quartus Project:** [`l2_bdi_cache_board_demo.qpf`](../synth/board_demo/l2_bdi_cache_board_demo.qpf) / [`l2_bdi_cache_board_demo.qsf`](../synth/board_demo/l2_bdi_cache_board_demo.qsf)
+* **Pin Constraints:** [`assign_board_demo_pins.tcl`](../synth/board_demo/assign_board_demo_pins.tcl)
 * **Physical Target:** Terasic DE2i-150 FPGA Board (Intel Cyclone IV GX `EP4CGX150DF31C7`)
 * **Hardware Synthesis Result:** **18,822 LEs, 9,012 registers, 160,768 memory bits, 106 physical I/O pins, 0 virtual pins, 0 Errors.**
 
