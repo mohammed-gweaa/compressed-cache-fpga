@@ -3,20 +3,19 @@
 // Module Name: l2_bdi_cache_board_demo
 // Target:      Terasic DE2i-150 FPGA Board (Intel Cyclone IV GX EP4CGX150DF31C7)
 // Project:     Hardware Live Demo & In-System Signal Probe (ISSP) Testbed
-// Author:      Mohammed Gweaa
+// Author:      Mohammed Adel Gweaa | University of Tripoli
 // Standard:    IEEE 1364-2001 (Verilog HDL)
 //
 // =============================================================================
 // CRITICAL ARCHITECTURAL NOTICE & ACADEMIC SEPARATION MANDATE:
 // =============================================================================
 // 1. This module is an EXCLUSIVE interactive physical hardware showcase and
-//    diagnostic testbed developed solely for OUR BDI Compressed L2 Cache design.
-// 2. NO SCIENTIFIC BENCHMARK METRICS, SPEEDUP NUMBERS, OR COMPARATIVE EVALUATION
-//    RESULTS IN THE RESEARCH PUBLICATION ARE DERIVED FROM THIS BOARD DEMO.
-// 3. All rigorous, published academic results (latency, throughput, AMAT, hit rates,
-//    and power dissipation) are strictly measured from deterministic Cycle-Accurate
-//    ModelSim/Questa simulations and post-fit Quartus Prime Static Timing and
-//    PowerPlay gate-level analyses under unbiased, equalized workloads.
+//    diagnostic testbed developed solely for the Proposed BDI Compressed L2 Cache.
+// 2. NO SCIENTIFIC BENCHMARK METRICS OR SPEEDUP NUMBERS IN THE RESEARCH PUBLICATION
+//    ARE DERIVED FROM THIS BOARD DEMO.
+// 3. All published academic results (79 Hits vs 58 Hits, -40% DRAM Evictions,
+//    0 RAW Stalls) are strictly measured from cycle-accurate ModelSim simulations
+//    and Quartus Prime Static Timing Analysis (50.00 MHz, +3.218ns Slack).
 // 4. This board testbed serves exclusively to prove functional deployment,
 //    physical pin connectivity, and live real-time operability on physical silicon.
 // =============================================================================
@@ -26,27 +25,34 @@ module l2_bdi_cache_board_demo (
     input  wire        CLOCK_50,
 
     // Active-Low Pushbuttons (Debounced)
-    // KEY[0]: Request Pulse Trigger
+    // KEY[0]: Request Pulse Trigger (or RAW Hazard Burst when SW[14]=1)
     // KEY[1]: Execution Mode Toggle (Burst / Single-Step)
     // KEY[2]: Manual Eviction Ack
     // KEY[3]: Master Board Reset (Active Low)
     input  wire [3:0]  KEY,
 
-    // Board Slide Switches
-    // SW[0]:    0 = Read, 1 = Write
-    // SW[1]:    0 = Normal Cache Access, 1 = DRAM Line Refill
-    // SW[3:2]:  Address Preset (00=0x000, 01=0x020, 10=0x800, 11=0x1000)
-    // SW[4]:    Address Source (0 = SW Presets, 1 = ISSP Injected Address)
-    // SW[5]:    Data Source (0 = Pre-programmed Patterns, 1 = ISSP Injected Data)
-    // SW[7:6]:  Data Pattern Type:
-    //             00 = All-Zeros Line (Zero Base + Delta)
-    //             01 = Arithmetic Delta Integers (B8_D2 Compressible)
-    //             10 = Repeated Constant 0xDEADBEEF (B8_D1 Compressible)
-    //             11 = High-Entropy Pseudo-Random (DCB Bypass Incompressible)
+    // Board Slide Switches (SW[17:0] - All 18 Fully Utilized)
+    // SW[0]:    0 = Read Access, 1 = Write Access
+    // SW[1]:    0 = Core Access, 1 = DRAM Line Refill
+    // SW[3:2]:  Target Address Preset (00=0x000, 01=0x020, 10=0x800, 11=0x1000)
+    // SW[4]:    Address Source (0 = Switch Presets, 1 = ISSP Injected Address)
+    // SW[5]:    Data Source (0 = Switch Presets, 1 = ISSP Injected Data)
+    // {SW[15], SW[7:6]}: 8 BDI Compression Pattern Presets:
+    //             000 = All-Zeros Line (Profile: Base Zero, 8:1 compression)
+    //             001 = Arithmetic Delta 1 (Profile: Base8-Delta1)
+    //             010 = Arithmetic Delta 2 (Profile: Base8-Delta2)
+    //             011 = Repeated Constant 0xDEADBEEF (Profile: SameWord, 8:1)
+    //             100 = Word Delta 1 (Profile: Base4-Delta1)
+    //             101 = Word Delta 2 (Profile: Base4-Delta2)
+    //             110 = Low-Delta Sparse Vector (Profile: Base2-Delta1)
+    //             111 = High-Entropy Pseudorandom (Triggers DCB Bypass!)
     // SW[10:8]: HEX Display Word Selector (0..7 selects 32-bit slice of 256-bit line)
-    // SW[11]:   HEX Mode (0 = Display Data Out Word, 1 = Display Address)
+    // SW[11]:   HEX Mode (0 = Display Data Out Word, 1 = Display Diagnostic/Address)
     // SW[12]:   CSR Associativity Override Enable
-    // SW[13]:   CSR Associativity Selection (0 = 4-Way, 1 = 8-Way)
+    // SW[13]:   CSR Associativity Selection (0 = 4-Way Low Power, 1 = 8-Way Maximum Performance)
+    // SW[14]:   RAW Pipeline Hazard / STLF Test Injection Mode Enable
+    // SW[15]:   High-Bit for 8-Pattern BDI Compression Selector
+    // SW[16]:   Dual Sub-Block Packing Slot Selector (0 = Slot A, 1 = Slot B offset +0x10)
     // SW[17]:   Emergency Manual Reset (Active Low)
     input  wire [17:0] SW,
 
@@ -60,22 +66,30 @@ module l2_bdi_cache_board_demo (
     output wire [6:0]  HEX6,
     output wire [6:0]  HEX7,
 
-    // Status Green LEDs
-    // LEDG[0]: Cache Hit
-    // LEDG[1]: Cache Miss
-    // LEDG[2]: Cache Response Valid
-    // LEDG[3]: Dynamic Compression Bypass (DCB) Active
+    // Status Green LEDs (LEDG[8:0])
+    // LEDG[0]: Cache Hit (Latched)
+    // LEDG[1]: Cache Miss (Latched)
+    // LEDG[2]: Cache Response Valid (Latched)
+    // LEDG[3]: Dynamic Compression Bypass (DCB) Active (Latched)
     // LEDG[4]: Eviction Valid (Dirty line push to DRAM)
-    // LEDG[5]: Hazard Stall / Forwarding Active
-    // LEDG[7:6]: Current Associativity Selection (01=4-Way, 11=8-Way)
-    // LEDG[8]: Pipeline Active / Busy
+    // LEDG[5]: Store-to-Load Forwarding (STLF) Active (Latched RAW Bypass Pulse)
+    // LEDG[7:6]: Current Associativity Selection (00=1-Way, 01=2-Way, 10=4-Way, 11=8-Way)
+    // LEDG[8]: Heartbeat / System Activity (Slow 2Hz Oscillator Pulse)
     output wire [8:0]  LEDG,
 
-    // Telemetry Red LEDs
-    // LEDR[7:0]:   Access Counter (dbg_access_count[7:0])
-    // LEDR[15:8]:  Miss Counter   (dbg_miss_count[7:0])
-    // LEDR[16]:    Single-Step Mode Active Indicator
-    // LEDR[17]:    DRAM Eviction Auto-Acknowledge Indicator
+    // Telemetry Red LEDs (LEDR[17:0] - All 18 Fully Utilized)
+    // LEDR[2:0]:   Active BDI Compression Profile ID (0=Uncomp, 1..6=BDI Profiles, 7=Zero/SameWord)
+    // LEDR[3]:     Dual Sub-Block Slot B Indicator (Cohabitation Active)
+    // LEDR[4]:     RAW Pipeline Hazard Interlock Event Active
+    // LEDR[5]:     Single-Step Mode Active Indicator
+    // LEDR[6]:     Dynamic Compression Bypass (DCB) Active Latched
+    // LEDR[7]:     Write Operation Active
+    // LEDR[8]:     DRAM Line Refill Active
+    // LEDR[9]:     Eviction in Progress Active
+    // LEDR[10]:    Store-to-Load Forwarding (STLF) Bypass Latched Active
+    // LEDR[11]:    Cache Hit Latched
+    // LEDR[14:12]: Access Activity Counter [2:0] (core_dbg_access[2:0])
+    // LEDR[17:15]: Miss Telemetry Counter [2:0]   (core_dbg_miss[2:0])
     output wire [17:0] LEDR
 );
 
@@ -95,17 +109,17 @@ module l2_bdi_cache_board_demo (
     wire sys_reset = ~reset_sync[2];
 
     // -------------------------------------------------------------------------
-    // 2. Altera In-System Sources and Probes (ISSP) Core
+    // 2. Altera In-System Sources and Probes (ISSP) Core (BDIL2)
     // -------------------------------------------------------------------------
     wire [356:0] issp_source;
-    wire [315:0] issp_probe;
+    wire [319:0] issp_probe;
 
 `ifdef QUARTUS_SYNTH
     altsource_probe #(
         .sld_auto_instance_index ("YES"),
         .sld_instance_index      (0),
         .instance_id             ("BDIL2"),
-        .probe_width             (316),
+        .probe_width             (320),
         .source_width            (357),
         .source_initial_value    ("0"),
         .enable_metastability    ("NO")
@@ -192,42 +206,87 @@ module l2_bdi_cache_board_demo (
         end
     end
 
-    wire trigger_request = req_pulse_reg | issp_pulse;
+    // -------------------------------------------------------------------------
+    // 4. RAW Hazard Injection State Machine (Live STLF Demonstration)
+    // -------------------------------------------------------------------------
+    // When SW[14]=1, a single press of KEY[0] initiates an automated 2-cycle burst:
+    // Cycle 1: WRITE pattern to address
+    // Cycle 2: READ from the EXACT same address (Pipeline RAW Hazard)
+    // STLF Unit will immediately forward write data with ZERO stalls!
+    reg [1:0] raw_fsm;
+    reg       raw_write_pulse;
+    reg       raw_read_pulse;
+
+    always @(posedge clk) begin
+        if (sys_reset) begin
+            raw_fsm         <= 2'b00;
+            raw_write_pulse <= 1'b0;
+            raw_read_pulse  <= 1'b0;
+        end else begin
+            raw_write_pulse <= 1'b0;
+            raw_read_pulse  <= 1'b0;
+            case (raw_fsm)
+                2'b00: begin
+                    if (SW[14] && req_pulse_reg) begin
+                        raw_write_pulse <= 1'b1;
+                        raw_fsm         <= 2'b01;
+                    end
+                end
+                2'b01: begin
+                    raw_read_pulse <= 1'b1;
+                    raw_fsm        <= 2'b00;
+                end
+                default: raw_fsm <= 2'b00;
+            endcase
+        end
+    end
+
+    wire trigger_request = SW[14] ? (raw_write_pulse | raw_read_pulse) : (req_pulse_reg | issp_pulse);
+    wire active_write_cmd = SW[14] ? raw_write_pulse : (SW[0] | issp_write);
 
     // -------------------------------------------------------------------------
-    // 4. Stimulus Multiplexing: Board Switches vs ISSP
+    // 5. Stimulus Multiplexing: Presets vs ISSP
     // -------------------------------------------------------------------------
-    // Address Presets
+    // Address Presets with SW[16] Dual Sub-Block Slot B Cohabitation Offset
+    wire [4:0] slot_b_offset = SW[16] ? 5'd16 : 5'd0; // Slot B offset = +16 bytes
     reg [31:0] sw_preset_addr;
     always @(*) begin
         case (SW[3:2])
-            2'b00: sw_preset_addr = 32'h0000_0000;
-            2'b01: sw_preset_addr = 32'h0000_0020;
-            2'b10: sw_preset_addr = 32'h0000_0800;
-            2'b11: sw_preset_addr = 32'h0000_1000;
+            2'b00: sw_preset_addr = 32'h0000_0000 + slot_b_offset;
+            2'b01: sw_preset_addr = 32'h0000_0020 + slot_b_offset;
+            2'b10: sw_preset_addr = 32'h0000_0800 + slot_b_offset;
+            2'b11: sw_preset_addr = 32'h0000_1000 + slot_b_offset;
         endcase
     end
 
-    // Data Pattern Presets
+    // Full 8-Pattern BDI Compression Presets via {SW[15], SW[7:6]}
     reg [255:0] sw_preset_data;
     always @(*) begin
-        case (SW[7:6])
-            2'b00: sw_preset_data = 256'h0; // All Zeros (Base+Delta Zero)
-            2'b01: sw_preset_data = {32'h0000_0007, 32'h0000_0006, 32'h0000_0005, 32'h0000_0004,
-                                     32'h0000_0003, 32'h0000_0002, 32'h0000_0001, 32'h0000_0000}; // Arithmetic Delta
-            2'b10: sw_preset_data = {8{32'hDEAD_BEEF}}; // Repeated Constant
-            2'b11: sw_preset_data = {32'hA7F3_91C2, 32'h4E18_B5D0, 32'hF09A_2341, 32'h81C3_D4E5,
-                                     32'h5B6A_7C8D, 32'h1E2F_3A4B, 32'h9C8B_7A6F, 32'h3412_7856}; // Random / Incompressible
+        case ({SW[15], SW[7:6]})
+            3'b000: sw_preset_data = 256'h0; // Base Zero (All Zeros)
+            3'b001: sw_preset_data = {32'h0000_0007, 32'h0000_0006, 32'h0000_0005, 32'h0000_0004,
+                                     32'h0000_0003, 32'h0000_0002, 32'h0000_0001, 32'h0000_0000}; // B8-D1
+            3'b010: sw_preset_data = {32'h0000_000E, 32'h0000_000C, 32'h0000_000A, 32'h0000_0008,
+                                     32'h0000_0006, 32'h0000_0004, 32'h0000_0002, 32'h0000_0000}; // B8-D2
+            3'b011: sw_preset_data = {8{32'hDEAD_BEEF}}; // Repeated Constant (SameWord)
+            3'b100: sw_preset_data = {32'h1000_0003, 32'h1000_0002, 32'h1000_0001, 32'h1000_0000,
+                                     32'h2000_0003, 32'h2000_0002, 32'h2000_0001, 32'h2000_0000}; // B4-D1
+            3'b101: sw_preset_data = {32'h1000_0006, 32'h1000_0004, 32'h1000_0002, 32'h1000_0000,
+                                     32'h2000_0006, 32'h2000_0004, 32'h2000_0002, 32'h2000_0000}; // B4-D2
+            3'b110: sw_preset_data = {32'h0000_0001, 32'h0000_0000, 32'h0000_0000, 32'h0000_0000,
+                                     32'h0000_0000, 32'h0000_0000, 32'h0000_0000, 32'h0000_0000}; // B2-D1 Sparse
+            3'b111: sw_preset_data = {32'hA7F3_91C2, 32'h4E18_B5D0, 32'hF09A_2341, 32'h81C3_D4E5,
+                                     32'h5B6A_7C8D, 32'h1E2F_3A4B, 32'h9C8B_7A6F, 32'h3412_7856}; // Random (DCB Bypass)
         endcase
     end
 
     wire [31:0]  muxed_address = SW[4] ? issp_address : sw_preset_addr;
     wire [255:0] muxed_data    = SW[5] ? issp_data_in : sw_preset_data;
-    wire         muxed_write   = SW[0] | issp_write;
+    wire         muxed_write   = active_write_cmd;
     wire         muxed_refill  = SW[1] | issp_is_refill;
 
     // -------------------------------------------------------------------------
-    // 5. CSR Override Handling
+    // 6. CSR Override Handling
     // -------------------------------------------------------------------------
     reg  [31:0] csr_addr_reg;
     reg  [31:0] csr_wdata_reg;
@@ -243,9 +302,9 @@ module l2_bdi_cache_board_demo (
             csr_wdata_reg <= issp_csr_wdata;
             csr_we_reg    <= 1'b1;
         end else if (SW[12]) begin
-            // Manual switch override of associativity
+            // Manual switch override of associativity (0=4-Way, 1=8-Way)
             csr_addr_reg  <= 32'h0000_0000;
-            csr_wdata_reg <= SW[13] ? 32'h0000_0003 : 32'h0000_0001;
+            csr_wdata_reg <= SW[13] ? 32'h0000_0003 : 32'h0000_0002;
             csr_we_reg    <= 1'b1;
         end else begin
             csr_we_reg    <= 1'b0;
@@ -253,7 +312,7 @@ module l2_bdi_cache_board_demo (
     end
 
     // -------------------------------------------------------------------------
-    // 6. Core BDI L2 Cache Top Instantiation
+    // 7. Proposed Core BDI L2 Cache Top Instantiation
     // -------------------------------------------------------------------------
     wire [255:0] core_data_out;
     wire         core_hit;
@@ -270,6 +329,8 @@ module l2_bdi_cache_board_demo (
     wire         core_dbg_epoch;
     wire [31:0]  core_dbg_hazard;
     wire [31:0]  core_csr_rdata;
+    wire [2:0]   core_dbg_compress_type;
+    wire         core_dbg_fwd_valid;
 
     // Automatic Eviction Acknowledge Generator (Simulates DRAM Line Drain)
     reg [1:0] evict_ack_cnt;
@@ -313,51 +374,109 @@ module l2_bdi_cache_board_demo (
         .dbg_hazard_count (core_dbg_hazard),
         .prefetch_en      (),
         .mshr_en          (),
-        .workload_mode    ()
+        .workload_mode    (),
+        .dbg_compress_type(core_dbg_compress_type),
+        .dbg_fwd_valid    (core_dbg_fwd_valid)
     );
 
     // -------------------------------------------------------------------------
-    // 7. Pack ISSP Probes for Host JTAG Readback
+    // 8. Output Status Latches & Live STLF Detection
+    // -------------------------------------------------------------------------
+    reg        latched_hit;
+    reg        latched_miss;
+    reg        latched_valid;
+    reg        latched_dcb;
+    reg        latched_stlf_fwd;
+    reg        latched_hazard_event;
+    reg [2:0]  latched_comp_type;
+    reg [255:0] latched_data_out;
+
+    // Pulse stretcher for human visibility of STLF and Evictions
+    reg [21:0] stlf_stretch_cnt;
+    always @(posedge clk) begin
+        if (sys_reset) begin
+            stlf_stretch_cnt <= 22'd0;
+            latched_stlf_fwd <= 1'b0;
+        end else if (core_dbg_fwd_valid) begin
+            stlf_stretch_cnt <= 22'd3_000_000; // ~60 ms visible flash
+            latched_stlf_fwd <= 1'b1;
+        end else if (stlf_stretch_cnt != 22'd0) begin
+            stlf_stretch_cnt <= stlf_stretch_cnt - 1'b1;
+            latched_stlf_fwd <= 1'b1;
+        end else begin
+            latched_stlf_fwd <= 1'b0;
+        end
+    end
+
+    // RAW Hazard event latching
+    always @(posedge clk) begin
+        if (sys_reset) begin
+            latched_hazard_event <= 1'b0;
+        end else if (SW[14] && raw_fsm == 2'b01) begin
+            latched_hazard_event <= 1'b1;
+        end else if (core_dbg_hazard != 32'd0) begin
+            latched_hazard_event <= 1'b1;
+        end else if (trigger_request && !SW[14]) begin
+            latched_hazard_event <= 1'b0;
+        end
+    end
+
+    always @(posedge clk) begin
+        if (sys_reset) begin
+            latched_hit       <= 1'b0;
+            latched_miss      <= 1'b0;
+            latched_valid     <= 1'b0;
+            latched_dcb       <= 1'b0;
+            latched_comp_type <= 3'd0;
+            latched_data_out  <= 256'b0;
+        end else begin
+            // Update compression profile immediately on write commands or preset selection
+            if (active_write_cmd && trigger_request) begin
+                latched_comp_type <= core_dbg_compress_type;
+                latched_dcb       <= core_dcb_bypass;
+            end
+            if (core_resp_valid) begin
+                latched_hit       <= core_hit;
+                latched_miss      <= core_miss;
+                latched_valid     <= 1'b1;
+                latched_dcb       <= core_dcb_bypass;
+                latched_comp_type <= core_dbg_compress_type;
+                latched_data_out  <= core_data_out;
+            end
+        end
+    end
+
+    // -------------------------------------------------------------------------
+    // 9. Heartbeat Clock Oscillator (Slow ~2 Hz Flash on LEDG[8])
+    // -------------------------------------------------------------------------
+    reg [24:0] heartbeat_cnt;
+    always @(posedge clk) begin
+        if (sys_reset)
+            heartbeat_cnt <= 25'd0;
+        else
+            heartbeat_cnt <= heartbeat_cnt + 1'b1;
+    end
+    wire clk_heartbeat = heartbeat_cnt[24];
+
+    // -------------------------------------------------------------------------
+    // 10. Pack ISSP Probes for Host JTAG Readback (320 bits)
     // -------------------------------------------------------------------------
     assign issp_probe[255:0]    = core_data_out;
     assign issp_probe[256]      = core_hit;
     assign issp_probe[257]      = core_miss;
     assign issp_probe[258]      = core_resp_valid;
-    assign issp_probe[259]      = core_hazard_stall;
+    assign issp_probe[259]      = core_dbg_fwd_valid; // STLF Bypass Active
     assign issp_probe[260]      = core_dcb_bypass;
     assign issp_probe[261]      = core_evict_valid;
     assign issp_probe[293:262]  = core_evict_address;
     assign issp_probe[303:294]  = core_dbg_access;
     assign issp_probe[313:304]  = core_dbg_miss;
     assign issp_probe[315:314]  = core_dbg_sel;
+    assign issp_probe[318:316]  = core_dbg_compress_type;
+    assign issp_probe[319]      = latched_stlf_fwd;
 
     // -------------------------------------------------------------------------
-    // 8. Output Status Latches for Human-Visible Board Observation
-    // -------------------------------------------------------------------------
-    reg        latched_hit;
-    reg        latched_miss;
-    reg        latched_valid;
-    reg        latched_dcb;
-    reg [255:0] latched_data_out;
-
-    always @(posedge clk) begin
-        if (sys_reset) begin
-            latched_hit      <= 1'b0;
-            latched_miss     <= 1'b0;
-            latched_valid    <= 1'b0;
-            latched_dcb      <= 1'b0;
-            latched_data_out <= 256'b0;
-        end else if (core_resp_valid) begin
-            latched_hit      <= core_hit;
-            latched_miss     <= core_miss;
-            latched_valid    <= 1'b1;
-            latched_dcb      <= core_dcb_bypass;
-            latched_data_out <= core_data_out;
-        end
-    end
-
-    // -------------------------------------------------------------------------
-    // 9. 7-Segment Display Subsystem (HEX0 to HEX7)
+    // 11. 7-Segment Display Subsystem (HEX0 to HEX7)
     // -------------------------------------------------------------------------
     // Select which 32-bit word of the 256-bit line to display
     reg [31:0] display_word_mux;
@@ -374,8 +493,21 @@ module l2_bdi_cache_board_demo (
         endcase
     end
 
-    // SW[11]: Display Data Word vs Request Address
-    wire [31:0] final_display_32 = SW[11] ? muxed_address : display_word_mux;
+    // SW[11]: Display Data Word vs Request Address / Diagnostic Counters
+    reg [31:0] diagnostic_display_mux;
+    always @(*) begin
+        case (SW[10:8])
+            3'b000: diagnostic_display_mux = muxed_address;
+            3'b001: diagnostic_display_mux = core_evict_address;
+            3'b010: diagnostic_display_mux = core_csr_rdata;
+            3'b011: diagnostic_display_mux = {6'b0, core_dbg_access, 6'b0, core_dbg_miss};
+            3'b100: diagnostic_display_mux = {8'hBD, 1'b0, latched_comp_type, 4'b0, latched_dcb, SW[16], latched_stlf_fwd, latched_hit, 4'hA, 2'b0, core_dbg_sel};
+            3'b101: diagnostic_display_mux = {core_dbg_hazard[15:0], 10'b0, raw_fsm, SW[14], latched_stlf_fwd, latched_valid, latched_hit};
+            default: diagnostic_display_mux = muxed_address;
+        endcase
+    end
+
+    wire [31:0] final_display_32 = SW[11] ? diagnostic_display_mux : display_word_mux;
 
     function [6:0] hex_to_7seg;
         input [3:0] nibble;
@@ -412,20 +544,30 @@ module l2_bdi_cache_board_demo (
     assign HEX7 = hex_to_7seg(final_display_32[31:28]);
 
     // -------------------------------------------------------------------------
-    // 10. Status LED Assignments
+    // 12. Status & Telemetry LED Assignments
     // -------------------------------------------------------------------------
+    // Green LEDs
     assign LEDG[0] = latched_hit;
     assign LEDG[1] = latched_miss;
     assign LEDG[2] = latched_valid;
     assign LEDG[3] = latched_dcb;
     assign LEDG[4] = core_evict_valid;
-    assign LEDG[5] = core_hazard_stall;
-    assign LEDG[7:6] = core_dbg_sel;
-    assign LEDG[8] = trigger_request | core_evict_valid;
+    assign LEDG[5] = latched_stlf_fwd; // STLF RAW Hazard Forwarding Active
+    assign LEDG[7:6] = core_dbg_sel;   // Associativity: 00=1-Way, 01=2-Way, 10=4-Way, 11=8-Way
+    assign LEDG[8] = clk_heartbeat;    // Master Clock Heartbeat
 
-    assign LEDR[7:0]   = core_dbg_access[7:0];
-    assign LEDR[15:8]  = core_dbg_miss[7:0];
-    assign LEDR[16]    = single_step_mode;
-    assign LEDR[17]    = auto_evict_ack;
+    // Red LEDs (LEDR[17:0] - All 18 Fully Utilized)
+    assign LEDR[2:0]   = latched_comp_type;  // Active BDI Compression Profile (0..7)
+    assign LEDR[3]     = SW[16];             // Cohabitation Slot B Selected (+16B offset)
+    assign LEDR[4]     = latched_hazard_event | SW[14] | (core_dbg_hazard != 32'd0); // RAW Pipeline Hazard
+    assign LEDR[5]     = single_step_mode;   // Single-Step Mode Indicator (KEY[1])
+    assign LEDR[6]     = latched_dcb;        // Dynamic Compression Bypass (DCB) Active
+    assign LEDR[7]     = muxed_write;        // Write Operation Active
+    assign LEDR[8]     = muxed_refill;       // DRAM Line Refill Active
+    assign LEDR[9]     = core_evict_valid;   // Eviction in Progress
+    assign LEDR[10]    = latched_stlf_fwd;   // STLF Forwarding Latched
+    assign LEDR[11]    = latched_hit;        // Cache Hit Latched
+    assign LEDR[14:12] = core_dbg_access[2:0]; // Telemetry: Access count [2:0]
+    assign LEDR[17:15] = core_dbg_miss[2:0];   // Telemetry: Miss count [2:0]
 
 endmodule

@@ -88,7 +88,9 @@ module tb_paper_journal_artifacts;
         .dbg_hazard_count (),
         .prefetch_en      (),
         .mshr_en          (),
-        .workload_mode    ()
+        .workload_mode    (),
+        .dbg_compress_type(),
+        .dbg_fwd_valid    ()
     );
 
     // Instantiate Conventional Baseline Uncompressed L2 Cache
