@@ -1,5 +1,7 @@
 # Pipelined Compressed L2 Cache with Reconfigurable Control for FPGA
 
+[📖 الدليل الكامل باللغة العربية (Arabic Version)](README_AR.md) | [English Documentation](README.md)
+
 [![Hardware Licence](https://img.shields.io/badge/Licence-CERN--OHL--W--2.0-blue.svg)](LICENSE)
 [![Target FPGA](https://img.shields.io/badge/FPGA-Intel_Cyclone_IV_GX-0071C5.svg)](https://www.intel.com)
 [![Board Target](https://img.shields.io/badge/Platform-Terasic_DE2i--150-red.svg)](https://www.terasic.com.tw)
@@ -131,6 +133,8 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   ├── COMPARATIVE_CACHE_AUDIT.md     # In-Depth Baseline vs. BDI Engineering Audit
 │   ├── SOC_INTEGRATION_ROADMAP.md     # Multi-Core Interconnect & RISC-V Roadmap
 │   └── DE2i-150_FPGA_System_manual.pdf# Terasic Hardware Reference Manual
+├── figures/                           # Academic Publication Vector Figures (PDF)
+│   └── README.md                      # Figure Catalog & Dissertation Mapping
 ├── poster/                            # Academic Graduation Poster & Deliverables
 │   ├── EngPoster.pdf                  # Master 2.0m x 1.5m Print-Ready Vector PDF
 │   ├── RTL.pdf                        # Synthesized Gate-Level RTL Schematic
@@ -140,7 +144,8 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 ├── CITATION.cff                       # Machine-Readable Citation Metadata
 ├── LICENSE                            # CERN Open Hardware Licence v2 - Weakly Reciprocal
 ├── run_modelsim.bat                   # Quick Root Shortcut for ModelSim Simulation
-└── README.md                          # Repository Master Documentation
+├── README_AR.md                       # Comprehensive Arabic Master Documentation
+└── README.md                          # Repository Master Documentation (English)
 ```
 
 ---
@@ -199,33 +204,122 @@ graph TD
 
 ---
 
-## Simulation & Reproduction
+---
 
-### Prerequisites
-* Mentor Graphics ModelSim / QuestaSim (FPGA Edition 2020.1 or compatible).
-* Intel Quartus Prime Standard Edition 22.1std.
+## How to Simulate & Synthesize: Complete User Guide
 
-### Running Testbenches in ModelSim GUI
-1. Open ModelSim and set the working directory to `sim`:
-   ```tcl
-   cd sim
-   ```
-2. Execute the automated regression test script:
-   ```tcl
-   do run_sim.do
-   ```
-3. To view the Store-to-Load Forwarding (STLF) wave analysis:
-   ```tcl
-   do wave_paper_read_stlf.do
-   ```
+### 1. Functional Verification in ModelSim / QuestaSim
 
-### Command-Line Execution (Windows)
-Run the automated batch script directly:
+The verification suite evaluates 17 core scenarios, Store-to-Load Forwarding (STLF), and side-by-side comparative stress benchmarks.
+
+#### Option A: One-Click GUI Launch (Recommended)
+Double-click `run_modelsim.bat` in the repository root, or run:
+```cmd
+cd sim
+RUN_WAVEFORM_L2_TOP.bat
+```
+This opens ModelSim GUI, compiles all RTL and testbenches, runs the complete test suite, and opens the pre-arranged signal waveform window.
+
+#### Option B: Automated Headless Batch Mode (Fastest)
+From Windows Command Prompt or PowerShell:
 ```cmd
 cd sim
 run_simulations.bat
 ```
-Or execute `run_modelsim.bat` from the repository root.
+Executes all regression suites and outputs an automated pass/fail report directly in the terminal without opening the graphical window.
+
+#### Option C: ModelSim Tcl Console Execution
+If ModelSim is already open:
+```tcl
+cd <path_to_repo>/sim
+
+# Compile and run full BDI regression suite:
+do run_sim.do
+
+# Compile and run conventional baseline cache:
+do run_sim_conventional.do
+
+# Inspect STLF RAW hazard bypass waveforms (Figure 9):
+do wave_paper_read_stlf.do
+
+# Inspect 4-stage pipelined write compression waveforms (Figure 10):
+do wave_paper_write_compression.do
+
+# Run side-by-side comparative stress benchmark:
+do wave_comparative_benchmark.do
+```
+
+#### Option D: Manual Project Setup in ModelSim (From Scratch)
+1. In ModelSim, select **File $\to$ New $\to$ Project**.
+2. Set Project Location to `<repo_root>/sim` and Project Name to `l2_cache`.
+3. Click **Add Existing File** and add all 9 synthesizable Verilog files from `rtl/bdi_cache/`:
+   * `l2_bdi_cache_top.v`, `l2_bdi_compressor.v`, `l2_bdi_decompressor.v`, `l2_hazard_interlock_unit.v`, `l2_cache_storage_array.v`, `l2_adaptive_power_governor.v`, `l2_csr_control_bank.v`, `l2_pipeline_input_stage.v`, `l2_ram_block.v`.
+4. Click **Add Existing File** and add the testbench:
+   * `tb/bdi_cache/tb_l2_bdi_cache_top.v`.
+5. In the Project tab, right-click and choose **Compile $\to$ Compile All**.
+6. Switch to the **Library** tab, expand the `work` directory, and double-click `tb_l2_bdi_cache_top`.
+7. In the transcript, type `run -all` to execute all 17 self-checking test scenarios.
+
+---
+
+### 2. FPGA Synthesis & Implementation in Intel Quartus Prime
+
+The repository provides three pre-configured Quartus projects matching the three isolated tracks.
+
+#### Track 1: Proposed BDI Compressed L2 Cache (`synth/bdi_cache/`)
+1. In Intel Quartus Prime, select **File $\to$ Open Project**.
+2. Open `synth/bdi_cache/l2_bdi_cache_top.qpf`.
+3. **Target Device:** Automatically set to Intel Cyclone IV GX `EP4CGX150DF31C7`.
+4. **Virtual Pins:** All 29 I/O ports are constrained as Virtual Pins via `virtual_pins_bdi.tcl` to measure pure internal FPGA logic cell usage and internal silicon interconnect delay without pad constraints.
+5. **Compile:** Select **Processing $\to$ Start Compilation** (or press `Ctrl + L`).
+6. **Verify Timing:** Open **TimeQuest Timing Analyzer** $\to$ double-click **Report Setup Summary**. Verified Slack: **+3.218 ns (MET)** at 50.00 MHz ($F_{\text{max}} = 59.59\text{ MHz}$).
+
+#### Track 2: Baseline Conventional Cache (`synth/conventional_cache/`)
+1. Select **File $\to$ Open Project** and open `synth/conventional_cache/l2_conventional_cache_top.qpf`.
+2. Select **Processing $\to$ Start Compilation** (`Ctrl + L`).
+3. Confirms baseline footprint: 3,554 LEs and 1,100 registers.
+
+#### Track 3: Physical Hardware Board Demo (`synth/board_demo/`)
+1. Select **File $\to$ Open Project** and open `synth/board_demo/l2_bdi_cache_board_demo.qpf`.
+2. Compiles strictly from isolated RTL in `rtl/board_demo/` and maps **106 physical package pins** via `assign_board_demo_pins.tcl`.
+3. Select **Processing $\to$ Start Compilation** (`Ctrl + L`).
+4. Generates programming bitstream: `output_files_demo/l2_bdi_cache_board_demo.sof`.
+5. **Program Board:** Connect USB-Blaster to Terasic DE2i-150 / DE2-115 board, select **Tools $\to$ Programmer**, verify hardware detection, and click **Start**.
+
+#### Command-Line Batch Compilation (Quartus Shell)
+```bash
+# Track 1: Proposed BDI Cache IP Core
+cd synth/bdi_cache
+quartus_sh --flow compile l2_bdi_cache_top
+
+# Track 2: Baseline Conventional Cache
+cd synth/conventional_cache
+quartus_sh --flow compile l2_conventional_cache_top
+
+# Track 3: Physical Board Demo & .sof Bitstream Generation
+cd synth/board_demo
+quartus_sh --flow compile l2_bdi_cache_board_demo
+```
+
+---
+
+### 3. In-System Hardware Verification via Altera ISSP JTAG
+
+For live verification on real silicon without external logic analyzers:
+1. Program the DE2i-150 board with `l2_bdi_cache_board_demo.sof`.
+2. Navigate to `synth/board_demo/issp_scripts/`.
+3. Read live hardware telemetry counters:
+   ```cmd
+   python issp_read_telemetry.py
+   ```
+4. Inject custom read/write transactions into the live cache:
+   ```cmd
+   python issp_inject_stimulus.py
+   ```
+5. Run the complete automated hardware verification suite:
+   ```cmd
+   python issp_auto_validate.py
+   ```
 
 ---
 
