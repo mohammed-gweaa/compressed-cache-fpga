@@ -154,6 +154,8 @@ Synthesized with Intel Quartus Prime Standard Edition 22.1std and verified with 
 │   ├── run_sim_conventional.do        # Baseline Conventional Cache Simulation Suite
 │   ├── run_simulations.bat            # Windows Command-Line Batch Runner
 │   ├── RUN_WAVEFORM_L2_TOP.bat        # Interactive GUI Launcher
+│   ├── RUN_SUMMARY_WAVEFORM_PDF.bat   # 17-Test Summary Waveform & PDF Export Launcher
+│   ├── wave_comprehensive_summary.do  # 17-Test Executive Verification Waveform
 │   ├── wave_l2_bdi_cache_top.do       # Full Hierarchical Waveform Configuration
 │   ├── wave_comparative_benchmark.do  # Comparative Analysis Waveform
 │   ├── wave_paper_read_stlf.do        # STLF Hazard Bypass Waveform
@@ -277,6 +279,12 @@ RUN_WAVEFORM_L2_TOP.bat
 ```
 This opens ModelSim GUI, compiles all RTL and testbenches, runs the complete test suite, and opens the pre-arranged signal waveform window.
 
+To launch the 17-test executive summary waveform (configured for high-resolution PDF print/export):
+```cmd
+cd sim
+RUN_SUMMARY_WAVEFORM_PDF.bat
+```
+
 #### Option B: Automated Headless Batch Mode (Fastest)
 From Windows Command Prompt or PowerShell:
 ```cmd
@@ -292,6 +300,9 @@ cd <path_to_repo>/sim
 
 # Compile and run full BDI regression suite:
 do run_sim.do
+
+# Inspect comprehensive 17-test summary tracker waveform:
+do wave_comprehensive_summary.do
 
 # Compile and run conventional baseline cache:
 do run_sim_conventional.do

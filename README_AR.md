@@ -158,6 +158,11 @@
   RUN_WAVEFORM_L2_TOP.bat
   ```
   أو تشغيل الاختصار الجذري من المجلد الرئيسي للمشروع: `run_modelsim.bat`.
+* لفتح واجهة ModelSim بموجة تتبع الاختبارات الـ 17 الشاملة والجاهزة للتصدير كـ PDF عالي الدقة:
+  ```cmd
+  cd sim
+  RUN_SUMMARY_WAVEFORM_PDF.bat
+  ```
 
 #### الخيار 2: التشغيل اليدوي من داخل واجهة ModelSim GUI
 1. افتح برنامج ModelSim.
@@ -169,15 +174,19 @@
    ```tcl
    do run_sim.do
    ```
-4. لاستعراض أشكال الموجات الخاصة بتجاوز التعارضات (STLF) المنشورة في الورقة العلمية (الشكل 9):
+4. لاستعراض موجة ملخص التحقق الشامل للاختبارات الـ 17 المرمزة لونياً:
+   ```tcl
+   do wave_comprehensive_summary.do
+   ```
+5. لاستعراض أشكال الموجات الخاصة بتجاوز التعارضات (STLF) المنشورة في الورقة العلمية (الشكل 9):
    ```tcl
    do wave_paper_read_stlf.do
    ```
-5. لاستعراض أشكال الموجات لضغط خط الأنابيب (الشكل 10):
+6. لاستعراض أشكال الموجات لضغط خط الأنابيب (الشكل 10):
    ```tcl
    do wave_paper_write_compression.do
    ```
-6. لتشغيل المحاكاة المقارنة بين الكاش المقترح والكاش التقليدي جنباً إلى جنب:
+7. لتشغيل المحاكاة المقارنة بين الكاش المقترح والكاش التقليدي جنباً إلى جنب:
    ```tcl
    do wave_comparative_benchmark.do
    ```
@@ -305,6 +314,8 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 │   ├── run_sim_conventional.do        # سكربت محاكاة الكاش التقليدي
 │   ├── run_simulations.bat            # سكربت تشغيل المحاكاة من الطرفية في ويندوز
 │   ├── RUN_WAVEFORM_L2_TOP.bat        # مشغل واجهة ModelSim الرسومية مع الـ Waveforms
+│   ├── RUN_SUMMARY_WAVEFORM_PDF.bat   # مشغل موجة ملخص الاختبارات الـ 17 وجاهزية تصدير PDF
+│   ├── wave_comprehensive_summary.do  # ملف تهيئة موجة تتبع الاختبارات الـ 17 الشاملة
 │   ├── wave_l2_bdi_cache_top.do       # تهيئة إشارات الموجات للنواة المقترحة
 │   ├── wave_comparative_benchmark.do  # تهيئة موجات المقارنة المزدوجة
 │   ├── wave_paper_read_stlf.do        # موجات تمرير البيانات STLF (الشكل 9)

@@ -14,6 +14,8 @@ sim/
 ├── run_sim_conventional.do        # Standalone regression test script (Conventional Baseline)
 ├── run_simulations.bat            # Windows batch script to run simulation in console mode
 ├── RUN_WAVEFORM_L2_TOP.bat        # Interactive batch launcher to start ModelSim GUI with waveforms
+├── RUN_SUMMARY_WAVEFORM_PDF.bat   # Interactive launcher for 17-test summary waveform & PDF export
+├── wave_comprehensive_summary.do  # Executive 17-test tracker waveform configuration
 ├── wave_l2_bdi_cache_top.do       # Hierarchical signal configuration for core testbench
 ├── wave_comparative_benchmark.do  # Waveform setup for side-by-side comparative benchmark
 ├── wave_paper_read_stlf.do        # STLF RAW hazard bypass waveform configuration (Figure 9)
