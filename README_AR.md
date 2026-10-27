@@ -3,6 +3,7 @@
 
 [English Documentation](README.md) | [📖 النسخة العربية](README_AR.md)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23703709.svg)](https://doi.org/10.5281/zenodo.23703709)
 [![Hardware Licence](https://img.shields.io/badge/Licence-CERN--OHL--W--2.0-blue.svg)](LICENSE)
 [![Target FPGA](https://img.shields.io/badge/FPGA-Intel_Cyclone_IV_GX-0071C5.svg)](https://www.intel.com)
 [![Board Target](https://img.shields.io/badge/Platform-Terasic_DE2i--150-red.svg)](https://www.terasic.com.tw)
@@ -367,7 +368,8 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
   author       = {Mohammed Adel Gweaa and Mohamed Muftah Eljhani},
   title        = {A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms},
   year         = {2026},
-  howpublished = {\url{https://github.com/mohammed-gweaa/compressed-cache-fpga}},
+  doi          = {10.5281/zenodo.23703709},
+  howpublished = {\url{https://doi.org/10.5281/zenodo.23703709}},
   institution  = {University of Tripoli, Faculty of Engineering}
 }
 ```
