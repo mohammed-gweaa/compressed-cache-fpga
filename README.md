@@ -1,4 +1,4 @@
-# Pipelined Compressed L2 Cache with Reconfigurable Control for FPGA
+# A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms
 
 [📖 الدليل الكامل باللغة العربية (Arabic Version)](README_AR.md) | [English Documentation](README.md)
 
@@ -411,7 +411,7 @@ To cite this repository in academic publications:
 ```bibtex
 @misc{gweaa2026compressedcache,
   author       = {Mohammed Adel Gweaa and Mohamed Muftah Eljhani},
-  title        = {A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms},
+  title        = {A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms},
   year         = {2026},
   howpublished = {\url{https://github.com/mohammed-gweaa/compressed-cache-fpga}},
   institution  = {University of Tripoli, Faculty of Engineering}

@@ -1,5 +1,5 @@
-# معمارية كاش المستوى الثاني (L2) المضغوط والممرحل مع تحكم ديناميكي قابل لإعادة التشكيل على مصفوفات الـ FPGA
-## Pipelined Compressed L2 Cache with Reconfigurable Control for FPGA
+# معمارية كاش مضغوطة وممرحلة مع ارتباطية قابلة لإعادة التشكيل أثناء التشغيل وتمرير لتفادي التعارضات لمنصات الـ FPGA
+## A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms
 
 [English Documentation](README.md) | [📖 النسخة العربية](README_AR.md)
 
@@ -365,7 +365,7 @@ quartus_sh --flow compile l2_bdi_cache_board_demo
 ```bibtex
 @misc{gweaa2026compressedcache,
   author       = {Mohammed Adel Gweaa and Mohamed Muftah Eljhani},
-  title        = {A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms},
+  title        = {A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms},
   year         = {2026},
   howpublished = {\url{https://github.com/mohammed-gweaa/compressed-cache-fpga}},
   institution  = {University of Tripoli, Faculty of Engineering}

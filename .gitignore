@@ -1,6 +1,6 @@
 # =============================================================================
 # Git Ignore Configuration for Synthesizable Verilog HDL & Academic Deliverables
-# Repository: Pipelined BDI Compressed L2 Cache Subsystem for FPGA
+# Repository: A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms
 # Target:     Intel Cyclone IV GX / Terasic DE2i-150 Platform
 # =============================================================================
 

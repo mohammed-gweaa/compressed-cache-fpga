@@ -1,6 +1,6 @@
 # Academic Publication Figures & Waveform Artifacts
 
-This directory contains high-resolution vector PDF figures documenting the microarchitecture, protocol flowcharts, silicon validation, and cycle-accurate waveform captures of the **Pipelined Compressed L2 Cache with Reconfigurable Control for FPGA**.
+This directory contains high-resolution vector PDF figures documenting the microarchitecture, protocol flowcharts, silicon validation, and cycle-accurate waveform captures of the **A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms**.
 
 ---
 

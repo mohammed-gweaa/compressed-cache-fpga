@@ -1,6 +1,6 @@
 # Engineering Contribution Guidelines & Hardware Architecture Standards
 
-Thank you for your interest in contributing to the **Pipelined Compressed L2 Cache with Reconfigurable Control for FPGA**.
+Thank you for your interest in contributing to the **A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms**.
 
 To preserve the scientific integrity, zero-defect verification status, and physical timing closure of the synthesizable Verilog core, all contributors must adhere to the following hardware engineering rules.
 

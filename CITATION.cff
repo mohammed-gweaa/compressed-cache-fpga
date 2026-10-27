@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this hardware architecture, testbenches, or reference this work in your research, please cite it as below."
-title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms"
+title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms"
 version: 1.0.0
 date-released: 2026-06-01
 license: "CERN-OHL-W-2.0"
@@ -31,6 +31,6 @@ preferred-citation:
     - family-names: "Eljhani"
       given-names: "Mohamed Muftah"
       affiliation: "Department of Computer Engineering, Faculty of Engineering, University of Tripoli"
-  title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Control for FPGA Platforms"
+  title: "A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms"
   year: 2026
   institution: "University of Tripoli"
