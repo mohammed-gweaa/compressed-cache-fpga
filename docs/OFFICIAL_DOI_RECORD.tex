@@ -1,0 +1,97 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.8cm,top=1.6cm,bottom=1.6cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{courier}
+
+\definecolor{navyblue}{RGB}{0, 40, 110}
+\definecolor{darkgray}{RGB}{50, 50, 50}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% --- Header with Institutional Logos ---
+\noindent
+\begin{minipage}[c]{0.14\textwidth}
+    \includegraphics[width=\linewidth]{../poster/latex_source/assets/tripoli_university_logo_hd.png}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.68\textwidth}
+    \centering
+    {\large \textbf{\textcolor{navyblue}{UNIVERSITY OF TRIPOLI}}}\\[1.5mm]
+    {\small \textbf{Faculty of Engineering $\cdot$ Department of Computer Engineering}}\\[1.5mm]
+    {\footnotesize \textbf{Academic Research \& Graduation Project Archival Record}}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.14\textwidth}
+    \includegraphics[width=\linewidth]{../poster/latex_source/assets/computer_engineering_department_logo_hd.png}
+\end{minipage}
+
+\vspace{3mm}
+\noindent\textcolor{navyblue}{\rule{\linewidth}{1.2pt}}
+\vspace{2mm}
+
+\begin{center}
+    {\large \textbf{\textcolor{navyblue}{OFFICIAL DIGITAL OBJECT IDENTIFIER (DOI) RECORD}}}\\[1mm]
+    {\footnotesize \textcolor{darkgray}{Permanent International Scientific Archival Verification $\cdot$ CERN / Zenodo Infrastructure}}
+\end{center}
+
+\vspace{3mm}
+
+% --- Master Record Table ---
+\noindent
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}>{\bfseries}p{4.2cm} X@{}}
+\toprule
+Specification & Verified Record Detail \\
+\midrule
+Title of Work & A Pipelined Compressed Cache Architecture with Runtime Reconfigurable Associativity and Hazard Forwarding for FPGA Platforms \\
+Digital Object Identifier (DOI) & \textbf{10.5281/zenodo.23703709} \\
+Persistent Resolving URI & \url{https://doi.org/10.5281/zenodo.23703709} \\
+Lead Researcher \& Designer & Eng. Mohammed Adel Gweaa (\texttt{m.ghawia@uot.edu.ly}) \\
+Academic Supervisor & Dr. Mohamed Muftah Eljhani \\
+Academic Institution & Department of Computer Engineering, Faculty of Engineering, University of Tripoli \\
+Host Source Repository & \url{https://github.com/mohammed-gweaa/compressed-cache-fpga} \\
+Registered Release Version & Release v1.0.0 (\texttt{compressed-cache-fpga-v1.0.0.zip}, 50.88 MB) \\
+Archival Data Facility & Zenodo / CERN Data Center (Geneva, Switzerland) \\
+Registration Date & 27 October 2026 \\
+Hardware License & CERN-OHL-W-2.0 (CERN Open Hardware Licence Version 2 - Weakly Reciprocal) \\
+\bottomrule
+\end{tabularx}
+
+\vspace{4mm}
+
+% --- BibTeX Citation ---
+\noindent \textbf{Standard BibTeX Citation Entry:}
+\vspace{1.5mm}
+
+\noindent
+\begin{minipage}{\linewidth}
+\footnotesize\ttfamily
+\fbox{\parbox{0.98\linewidth}{%
+@misc\{gweaa2026compressedcache,\\
+\hspace*{4mm}author       = \{Mohammed Adel Gweaa and Mohamed Muftah Eljhani\},\\
+\hspace*{4mm}title        = \{A Pipelined Compressed Cache Architecture with Runtime Reconfigurable\\
+\hspace*{20mm}Associativity and Hazard Forwarding for FPGA Platforms\},\\
+\hspace*{4mm}year         = \{2026\},\\
+\hspace*{4mm}doi          = \{10.5281/zenodo.23703709\},\\
+\hspace*{4mm}howpublished = \{\textbackslash url\{https://doi.org/10.5281/zenodo.23703709\}\},\\
+\hspace*{4mm}institution  = \{University of Tripoli, Faculty of Engineering\}\\
+\}%
+}}
+\end{minipage}
+
+\vspace{4mm}
+\noindent\textcolor{navyblue}{\rule{\linewidth}{0.6pt}}
+\vspace{1mm}
+
+\begin{center}
+    \scriptsize \textcolor{darkgray}{This certified summary establishes immutable priority of invention and academic provenance for the hardware intellectual property.}
+\end{center}
+
+\end{document}
